@@ -80,7 +80,8 @@ extension Point {
 
 func generateNorms(_ points:[Point], _ size:CGSize) -> [Point] {
     return points.map { p in
-        Point(x: p.x * Double(size.width), y: p.y * Double(size.height))
+        let y = (p.y * Double(size.width) + (Double(size.height) / Double(4)) )
+        return Point(x: p.x * Double(size.width), y: y)
     }
 }
 
