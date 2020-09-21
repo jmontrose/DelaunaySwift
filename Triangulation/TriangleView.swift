@@ -66,9 +66,39 @@ func generateVertices(_ size: CGSize, cellSize: CGFloat, variance: CGFloat = 0.7
 }
 
 
+struct SimplePoints: Decodable {
+    let points:[[Double]]
+}
+
+typealias ArrayOfArrays = [[Double]]
 
 class TriangleView: UIView {
     var triangles: [(Triangle, CAShapeLayer)] = []
+    var delaunayTriangles = [Triangle]()
+    
+    
+    func loadText(name:String) -> String {
+        let url = Bundle(for: type(of: self)).url(forResource: name, withExtension: "")
+        guard let dataURL = url else {
+            fatalError("Empty \(String(describing: url))")
+        }
+        guard let data = try? Data(contentsOf: dataURL) else {
+            fatalError("Couldn't read \(String(describing: url))")
+        }
+        let string = String(data:data, encoding: .utf8)!
+        return string
+    }
+
+    func load(_ name:String) -> [Point] {
+        let raw = loadText(name: name)
+        do {
+            let simplePoints = try JSONDecoder().decode(ArrayOfArrays.self, from: Data(raw.utf8))
+            return normalize(simplePoints)
+        } catch {
+            fatalError("err: \(error)")
+        }
+        return []
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -80,6 +110,7 @@ class TriangleView: UIView {
     
     override func didMoveToSuperview() {
         initTriangles()
+        print("have \(delaunayTriangles.count) triangles")
     }
     
     func initTriangles() {
@@ -87,11 +118,14 @@ class TriangleView: UIView {
             triangleLayer.removeFromSuperlayer()
         }
 
-        print(" POINTS \(points1)")
+        let p = load("points1000.json")
+        print("len raw \(p.count)")
+//        print(" POINTS \(points1)")
         //let points = generateVertices(bounds.size, cellSize: 80)
         //let points = generateVerticesRandom(bounds.size, count:100)
-        let points = generateNorms(points1, bounds.size)
-        let delaunayTriangles = triangulate(points)
+        let points = generateNorms(p, bounds.size)
+
+        delaunayTriangles = triangulate(points)
         
         triangles = []
         for triangle in delaunayTriangles {

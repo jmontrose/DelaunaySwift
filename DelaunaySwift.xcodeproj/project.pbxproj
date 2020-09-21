@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		8819E0AD2518EAD100113DFF /* points.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8819E0AC2518EAD100113DFF /* points.swift */; };
+		8819E0B52518F9E300113DFF /* points1000.json in Resources */ = {isa = PBXBuildFile; fileRef = 8819E0B42518F9E300113DFF /* points1000.json */; };
 		C41B5BC51C3FF148006B601E /* DelaunaySwift.h in Headers */ = {isa = PBXBuildFile; fileRef = C41B5BC41C3FF148006B601E /* DelaunaySwift.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C41B5BCC1C3FF148006B601E /* DelaunaySwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C41B5BC11C3FF148006B601E /* DelaunaySwift.framework */; };
 		C41B5BD11C3FF148006B601E /* DelaunayTriangulationSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41B5BD01C3FF148006B601E /* DelaunayTriangulationSwiftTests.swift */; };
@@ -66,6 +67,7 @@
 
 /* Begin PBXFileReference section */
 		8819E0AC2518EAD100113DFF /* points.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = points.swift; sourceTree = "<group>"; };
+		8819E0B42518F9E300113DFF /* points1000.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = points1000.json; sourceTree = "<group>"; };
 		C41B5BC11C3FF148006B601E /* DelaunaySwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DelaunaySwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C41B5BC41C3FF148006B601E /* DelaunaySwift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DelaunaySwift.h; sourceTree = "<group>"; };
 		C41B5BC61C3FF148006B601E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -175,6 +177,7 @@
 				C41B5BFD1C3FFF1E006B601E /* TriangleView.swift */,
 				8819E0AC2518EAD100113DFF /* points.swift */,
 				C41B5BFF1C3FFF49006B601E /* Utilities.swift */,
+				8819E0B42518F9E300113DFF /* points1000.json */,
 				C41B5BFC1C3FFE3C006B601E /* Supporting Files */,
 			);
 			name = TriangulationExample;
@@ -363,6 +366,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C41B5BF61C3FFDF8006B601E /* LaunchScreen.storyboard in Resources */,
+				8819E0B52518F9E300113DFF /* points1000.json in Resources */,
 				C41B5BF31C3FFDF8006B601E /* Assets.xcassets in Resources */,
 				C41B5BF11C3FFDF8006B601E /* Main.storyboard in Resources */,
 			);
