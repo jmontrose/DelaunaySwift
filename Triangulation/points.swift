@@ -11,11 +11,10 @@ import UIKit
 import GameplayKit
 import DelaunaySwift
 
-
-func normalize(_ points:[[Double]]) -> [Point] {
-    return normalize(points.map { i in
+func makePoints(_ nums:[[Double]]) -> [Point] {
+    return nums.map { i in
         Point(x: i[0], y: i[1])
-    })
+    }
 }
 
 func normalize(_ points:[Point]) -> [Point] {

@@ -155,7 +155,8 @@ class TriangleView: UIView {
         let raw = loadText(name: name)
         do {
             let simplePoints = try JSONDecoder().decode(ArrayOfArrays.self, from: Data(raw.utf8))
-            return normalize(simplePoints)
+            let p = makePoints(simplePoints)
+            return normalize(p)
         } catch {
             fatalError("err: \(error)")
         }
