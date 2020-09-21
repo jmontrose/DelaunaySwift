@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8819E0AD2518EAD100113DFF /* points.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8819E0AC2518EAD100113DFF /* points.swift */; };
 		C41B5BC51C3FF148006B601E /* DelaunaySwift.h in Headers */ = {isa = PBXBuildFile; fileRef = C41B5BC41C3FF148006B601E /* DelaunaySwift.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C41B5BCC1C3FF148006B601E /* DelaunaySwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C41B5BC11C3FF148006B601E /* DelaunaySwift.framework */; };
 		C41B5BD11C3FF148006B601E /* DelaunayTriangulationSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41B5BD01C3FF148006B601E /* DelaunayTriangulationSwiftTests.swift */; };
@@ -64,6 +65,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		8819E0AC2518EAD100113DFF /* points.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = points.swift; sourceTree = "<group>"; };
 		C41B5BC11C3FF148006B601E /* DelaunaySwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DelaunaySwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C41B5BC41C3FF148006B601E /* DelaunaySwift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DelaunaySwift.h; sourceTree = "<group>"; };
 		C41B5BC61C3FF148006B601E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -171,6 +173,7 @@
 				C41B5BEB1C3FFDF8006B601E /* AppDelegate.swift */,
 				C41B5BED1C3FFDF8006B601E /* ViewController.swift */,
 				C41B5BFD1C3FFF1E006B601E /* TriangleView.swift */,
+				8819E0AC2518EAD100113DFF /* points.swift */,
 				C41B5BFF1C3FFF49006B601E /* Utilities.swift */,
 				C41B5BFC1C3FFE3C006B601E /* Supporting Files */,
 			);
@@ -403,6 +406,7 @@
 				C41B5C011C4001A2006B601E /* TriangleView.swift in Sources */,
 				C41B5C021C4001A2006B601E /* Utilities.swift in Sources */,
 				C41B5BEC1C3FFDF8006B601E /* AppDelegate.swift in Sources */,
+				8819E0AD2518EAD100113DFF /* points.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

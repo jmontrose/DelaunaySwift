@@ -10,6 +10,27 @@ import UIKit
 import GameplayKit
 import DelaunaySwift
 
+
+extension Point {
+    static func random(size:CGSize) -> Point {
+        return Point(x: Double.random(in: Double(0)...Double(size.width)), y: Double.random(in: Double(0)...Double(size.height)))
+    }
+}
+
+func generateNorms(_ points:[Point], _ size:CGSize) -> [Point] {
+    return points.map { p in
+        Point(x: p.x * Double(size.width), y: p.y * Double(size.height))
+    }
+}
+
+func generateVerticesRandom(_ size: CGSize, count:Int, seed: UInt64 = UInt64.random(in: 0..<UInt64.max)) -> [Point] {
+    var points = [Point]()
+    for _ in 0...100 {
+        points.append(Point.random(size: size))
+    }
+    return points
+}
+
 /// Generate set of points for our triangulation to use
 func generateVertices(_ size: CGSize, cellSize: CGFloat, variance: CGFloat = 0.75, seed: UInt64 = UInt64.random(in: 0..<UInt64.max)) -> [Point] {
     
@@ -44,6 +65,8 @@ func generateVertices(_ size: CGSize, cellSize: CGFloat, variance: CGFloat = 0.7
     return points
 }
 
+
+
 class TriangleView: UIView {
     var triangles: [(Triangle, CAShapeLayer)] = []
     
@@ -64,7 +87,10 @@ class TriangleView: UIView {
             triangleLayer.removeFromSuperlayer()
         }
 
-        let points = generateVertices(bounds.size, cellSize: 80)
+        print(" POINTS \(points1)")
+        //let points = generateVertices(bounds.size, cellSize: 80)
+        //let points = generateVerticesRandom(bounds.size, count:100)
+        let points = generateNorms(points1, bounds.size)
         let delaunayTriangles = triangulate(points)
         
         triangles = []
