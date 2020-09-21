@@ -10,6 +10,67 @@ import UIKit
 import GameplayKit
 import DelaunaySwift
 
+struct Circumcircle: Hashable {
+    let point1: Point
+    let point2: Point
+    let point3: Point
+    let x: Double
+    let y: Double
+    let rsqr: Double
+}
+
+func circumcircle(_ triangle:Triangle) -> Circumcircle {
+    return circumcircle(triangle.point1, j: triangle.point2, k: triangle.point3)
+}
+
+/// Calculate the intersecting circumcircle for a set of 3 points
+func circumcircle(_ i: Point, j: Point, k: Point) -> Circumcircle {
+    let x1 = i.x
+    let y1 = i.y
+    let x2 = j.x
+    let y2 = j.y
+    let x3 = k.x
+    let y3 = k.y
+    let xc: Double
+    let yc: Double
+    
+    let fabsy1y2 = abs(y1 - y2)
+    let fabsy2y3 = abs(y2 - y3)
+    
+    if fabsy1y2 < Double.ulpOfOne {
+        let m2 = -((x3 - x2) / (y3 - y2))
+        let mx2 = (x2 + x3) / 2
+        let my2 = (y2 + y3) / 2
+        xc = (x2 + x1) / 2
+        yc = m2 * (xc - mx2) + my2
+    } else if fabsy2y3 < Double.ulpOfOne {
+        let m1 = -((x2 - x1) / (y2 - y1))
+        let mx1 = (x1 + x2) / 2
+        let my1 = (y1 + y2) / 2
+        xc = (x3 + x2) / 2
+        yc = m1 * (xc - mx1) + my1
+    } else {
+        let m1 = -((x2 - x1) / (y2 - y1))
+        let m2 = -((x3 - x2) / (y3 - y2))
+        let mx1 = (x1 + x2) / 2
+        let mx2 = (x2 + x3) / 2
+        let my1 = (y1 + y2) / 2
+        let my2 = (y2 + y3) / 2
+        xc = (m1 * mx1 - m2 * mx2 + my2 - my1) / (m1 - m2)
+        
+        if fabsy1y2 > fabsy2y3 {
+            yc = m1 * (xc - mx1) + my1
+        } else {
+            yc = m2 * (xc - mx2) + my2
+        }
+    }
+    
+    let dx = x2 - xc
+    let dy = y2 - yc
+    let rsqr = dx * dx + dy * dy
+    
+    return Circumcircle(point1: i, point2: j, point3: k, x: xc, y: yc, rsqr: rsqr)
+}
 
 extension Point {
     static func random(size:CGSize) -> Point {
@@ -111,6 +172,19 @@ class TriangleView: UIView {
     override func didMoveToSuperview() {
         initTriangles()
         print("have \(delaunayTriangles.count) triangles")
+
+        let circles = delaunayTriangles.map { circumcircle($0) }
+        let rsqrs = circles.map { $0.rsqr }.sorted()
+        let med = rsqrs[rsqrs.count/2]
+        print("rsqrs \(rsqrs.count) min:\(rsqrs.min()!) max:\(rsqrs.max()!) med:\(med)")
+        
+        for (triangle, layer) in triangles {
+            let c = circumcircle(triangle)
+            //print ("Triangle \(c)")
+            if c.rsqr > 900 {
+                layer.fillColor = UIColor.white.cgColor
+            }
+        }
     }
     
     func initTriangles() {
@@ -127,11 +201,14 @@ class TriangleView: UIView {
 
         delaunayTriangles = triangulate(points)
         
+        
+        
         triangles = []
         for triangle in delaunayTriangles {
             let triangleLayer = CAShapeLayer()
             triangleLayer.path = triangle.toPath()
             triangleLayer.fillColor = UIColor().randomColor().cgColor
+            triangleLayer.strokeColor = UIColor.black.cgColor
             triangleLayer.backgroundColor = UIColor.clear.cgColor
             layer.addSublayer(triangleLayer)
             

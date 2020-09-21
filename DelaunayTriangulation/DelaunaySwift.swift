@@ -7,7 +7,7 @@
 //
 
 /// Generates a supertraingle containing all other triangles
-internal func supertriangle(_ points: [Point]) -> [Point] {
+func supertriangle(_ points: [Point]) -> [Point] {
     var xmin = Double(Int32.max)
     var ymin = Double(Int32.max)
     var xmax = -Double(Int32.max)
@@ -34,7 +34,7 @@ internal func supertriangle(_ points: [Point]) -> [Point] {
 }
 
 /// Calculate the intersecting circumcircle for a set of 3 points
-internal func circumcircle(_ i: Point, j: Point, k: Point) -> Circumcircle {
+func circumcircle(_ i: Point, j: Point, k: Point) -> Circumcircle {
     let x1 = i.x
     let y1 = i.y
     let x2 = j.x
