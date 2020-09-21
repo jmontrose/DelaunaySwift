@@ -31,3 +31,12 @@ func normalize(_ points:[Point]) -> [Point] {
     }
 
 }
+
+func box(from points:[Point]) -> CGRect {
+    let xs = points.map { $0.x }
+    let ys = points.map { $0.y }
+    let pmin = CGPoint(x: xs.min()!, y: ys.min()!)
+    let pmax = CGPoint(x: xs.max()!, y: ys.max()!)
+    let pspan = CGSize(width: pmax.x - pmin.x, height: pmax.y - pmin.y)
+    return CGRect(origin: pmin, size: pspan)
+}

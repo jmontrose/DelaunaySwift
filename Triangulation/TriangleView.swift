@@ -150,13 +150,13 @@ class TriangleView: UIView {
         let string = String(data:data, encoding: .utf8)!
         return string
     }
-
+    
     func load(_ name:String) -> [Point] {
         let raw = loadText(name: name)
         do {
             let simplePoints = try JSONDecoder().decode(ArrayOfArrays.self, from: Data(raw.utf8))
             let p = makePoints(simplePoints)
-            return normalize(p)
+            return p
         } catch {
             fatalError("err: \(error)")
         }
@@ -174,7 +174,7 @@ class TriangleView: UIView {
     override func didMoveToSuperview() {
         initTriangles()
         print("have \(delaunayTriangles.count) triangles")
-
+        
         let circles = delaunayTriangles.map { circumcircle($0) }
         let rsqrs = circles.map { $0.rsqr }.sorted()
         let med = rsqrs[rsqrs.count/2]
@@ -193,14 +193,31 @@ class TriangleView: UIView {
         for (_, triangleLayer) in triangles {
             triangleLayer.removeFromSuperlayer()
         }
-
-        let p = load("points1000.json")
+        
+        var p = load("points1000.json")
         print("len raw \(p.count)")
-//        print(" POINTS \(points1)")
+        //        print(" POINTS \(points1)")
         //let points = generateVertices(bounds.size, cellSize: 80)
         //let points = generateVerticesRandom(bounds.size, count:100)
+        
+        let bounding = box(from: p)
+        let bounding1000 = CGRect(x: 42869063.32687465, y: 103726748.26747078, width: 95355.88277196884, height: 90267.3662738651)
+        print("bounding \(bounding)")
+        print("bounding \(bounding1000)")
+        p = p.filter { point in
+            let cgpoint = CGPoint(x: point.x, y: point.y)
+            let inside = bounding.contains(cgpoint)
+            //print("test \(cgpoint) \(box) \(inside)")
+            return inside
+        }
+        print("points after filter \(p.count) ")
+        if p.count == 0 {
+            fatalError()
+        }
+        
+        p = normalize(p)
         let points = generateNorms(p, bounds.size)
-
+        
         delaunayTriangles = triangulate(points)
         
         
