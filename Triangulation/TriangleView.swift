@@ -194,7 +194,7 @@ class TriangleView: UIView {
             triangleLayer.removeFromSuperlayer()
         }
         
-        var p = load("points1000.json")
+        var p = load("points10000.json")
         print("len raw \(p.count)")
         //        print(" POINTS \(points1)")
         //let points = generateVertices(bounds.size, cellSize: 80)
@@ -206,7 +206,7 @@ class TriangleView: UIView {
         print("bounding \(bounding1000)")
         p = p.filter { point in
             let cgpoint = CGPoint(x: point.x, y: point.y)
-            let inside = bounding.contains(cgpoint)
+            let inside = bounding1000.contains(cgpoint)
             //print("test \(cgpoint) \(box) \(inside)")
             return inside
         }
