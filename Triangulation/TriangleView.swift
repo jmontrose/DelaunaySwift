@@ -137,7 +137,8 @@ typealias ArrayOfArrays = [[Double]]
 class TriangleView: UIView {
     var triangles: [(Triangle, CAShapeLayer)] = []
     var delaunayTriangles = [Triangle]()
-    
+    var allPoints = [Point]()
+    var pointsToTri = [Point:[Triangle]]()
     
     func loadText(name:String) -> String {
         let url = Bundle(for: type(of: self)).url(forResource: name, withExtension: "")
@@ -183,9 +184,12 @@ class TriangleView: UIView {
         for (triangle, layer) in triangles {
             let c = circumcircle(triangle)
             //print ("Triangle \(c)")
-            if c.rsqr > 900 {
+            if c.rsqr > 500 {
                 layer.fillColor = UIColor.white.cgColor
             }
+            
+            
+            //layer.strokeColor = UIColor.black.cgColor
         }
     }
     
@@ -216,10 +220,14 @@ class TriangleView: UIView {
         }
         
         p = normalize(p)
-        let points = generateNorms(p, bounds.size)
+        allPoints = generateNorms(p, bounds.size)
+        delaunayTriangles = triangulate(allPoints)
         
-        delaunayTriangles = triangulate(points)
-        
+        for triangle in delaunayTriangles {
+            for point in triangle.points {
+                pointsToTri[point, default: []].append(triangle)
+            }
+        }
         
         
         triangles = []
@@ -227,12 +235,21 @@ class TriangleView: UIView {
             let triangleLayer = CAShapeLayer()
             triangleLayer.path = triangle.toPath()
             triangleLayer.fillColor = UIColor().randomColor().cgColor
-            triangleLayer.strokeColor = UIColor.black.cgColor
+            //triangleLayer.strokeColor = UIColor.black.cgColor
             triangleLayer.backgroundColor = UIColor.clear.cgColor
             layer.addSublayer(triangleLayer)
             
             triangles.append((triangle, triangleLayer))
         }
+    }
+    
+    func neighbors(for triangle:Triangle) -> [Triangle] {
+        
+        let tries = triangle.points.flatMap {
+            pointsToTri[$0]!
+        }
+        let uniques = Set(tries)
+        return Array(uniques)
     }
     
     @IBAction func singleTap(recognizer: UITapGestureRecognizer) {

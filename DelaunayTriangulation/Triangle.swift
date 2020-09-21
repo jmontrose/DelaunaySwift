@@ -18,4 +18,8 @@ public struct Triangle: Hashable {
     public let point1: Point
     public let point2: Point
     public let point3: Point
+    
+    public var points:[Point] {
+        return [point1, point2, point3]
+    }
 }
