@@ -259,7 +259,7 @@ class TriangleView: UIView {
             let eq = oldPath == newPath
             print("eq \(eq)")
             triangleLayer.path = oldPath
-            print("    path \(triangleLayer.path)")
+            print("    path \(triangleLayer.path!)")
             //print("path \(triangle) \(normTriangle) \(triangleLayer.path)")
             triangleLayer.fillColor = UIColor().randomColor().cgColor
             //triangleLayer.strokeColor = UIColor.black.cgColor
