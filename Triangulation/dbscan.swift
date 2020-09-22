@@ -57,6 +57,14 @@ class DBScan {
     }
     
     func process(_ vertex:DBVertex) {
+        print("proc \(vertex)")
+        for v in neighborhoodFor(vertex) {
+            let distance = vertex.point.distance(to: v.point)
+            print("   neighbor \(v) distance \(distance)")
+        }
+    }
+    
+    func neighborhoodFor(_ vertex:DBVertex) -> Set<DBVertex> {
         var extendedHood = Set<DBVertex>()
         func neighborCheck(_ candidate:DBVertex) -> Bool {
             if candidate == vertex {
@@ -68,11 +76,7 @@ class DBScan {
             return vertex.point.distance(to: candidate.point) < 100.0
         }
         extendedHood = buildNeighborhood(extendedHood, center:vertex, next: vertex.neighbors, check:neighborCheck, depth: 1)
-        print("proc \(vertex) \(extendedHood.count)")
-        for v in extendedHood {
-            let distance = vertex.point.distance(to: v.point)
-            print("   neighbor \(v) distance \(distance)")
-        }
+        return extendedHood
     }
     
     func buildNeighborhood(_ hood:Set<DBVertex>, center:DBVertex, next:Set<DBVertex>, check:(DBVertex)->Bool, depth:Int) -> Set<DBVertex> {
