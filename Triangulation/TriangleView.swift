@@ -242,10 +242,11 @@ class TriangleView: UIView {
         
         
         triangles = []
-        for triangle in delaunayTriangles {
+        for (i, triangle) in delaunayTriangles.enumerated() {
+            let mkTriangle = mkTriangles[i]
             let triangleLayer = CAShapeLayer()
             let normTriangle = Triangle(
-                triangle.points.map {
+                mkTriangle.points.map {
                     let normPoint = normConverter!($0)
                     let screenPoint = normPoint.screen(by: bounds.size)
                     return screenPoint
@@ -254,6 +255,7 @@ class TriangleView: UIView {
             triangleLayer.path = triangle.toPath()
             print("old path \(triangle.toPath())")
             print("new path \(normTriangle.toPath())")
+            print("    path \(triangleLayer.path)")
             //print("path \(triangle) \(normTriangle) \(triangleLayer.path)")
             triangleLayer.fillColor = UIColor().randomColor().cgColor
             //triangleLayer.strokeColor = UIColor.black.cgColor
