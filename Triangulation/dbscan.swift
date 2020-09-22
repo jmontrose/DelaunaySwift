@@ -30,7 +30,7 @@ class DBScan {
     }
     
     func process(_ vertex:DBVertex) {
-        print("proc \(vertex)")
+        //print("proc \(vertex)")
     }
 }
 

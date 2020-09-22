@@ -231,11 +231,25 @@ class TriangleView: UIView {
                 })
             let newPath = normTriangle.toPath()
             triangleLayer.path = newPath
-            triangleLayer.fillColor = UIColor().randomColor().cgColor
+            //triangleLayer.fillColor = UIColor().randomColor().cgColor
+            triangleLayer.fillColor = UIColor.lightGray.cgColor
             triangleLayer.backgroundColor = UIColor.clear.cgColor
             layer.addSublayer(triangleLayer)
             
             triangles.append((normTriangle, triangleLayer))
+        }
+        
+        for vertex in vertices {
+            let normPoint = normConverter!(vertex.point)
+            let screenPoint = normPoint.screen(by: bounds.size)
+            let vertexLayer = CAShapeLayer()
+            let step = Double(3)
+            let vbox = CGRect(x: screenPoint.x - step, y: screenPoint.y - step, width: step * 2, height: step * 2)
+            vertexLayer.path = UIBezierPath(ovalIn: vbox).cgPath;
+            vertexLayer.strokeColor = UIColor.orange.cgColor
+            vertexLayer.fillColor = UIColor.orange.cgColor
+            layer.addSublayer(vertexLayer)
+
         }
         
         print("have \(mkTriangles.count) triangles")
@@ -252,7 +266,7 @@ class TriangleView: UIView {
                 layer.fillColor = UIColor.white.cgColor
                 
             } else {
-                layer.strokeColor = UIColor.black.cgColor
+                //layer.strokeColor = UIColor.black.cgColor
             }
             
             
