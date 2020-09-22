@@ -252,9 +252,13 @@ class TriangleView: UIView {
                     return screenPoint
                 })
             //print("convert \(triangle) to \(normTriangle)")
-            triangleLayer.path = triangle.toPath()
-            print("old path \(triangle.toPath())")
-            print("new path \(normTriangle.toPath())")
+            let oldPath = triangle.toPath()
+            let newPath = normTriangle.toPath()
+            print("old path \(oldPath)")
+            print("new path \(newPath)")
+            let eq = oldPath == newPath
+            print("eq \(eq)")
+            triangleLayer.path = oldPath
             print("    path \(triangleLayer.path)")
             //print("path \(triangle) \(normTriangle) \(triangleLayer.path)")
             triangleLayer.fillColor = UIColor().randomColor().cgColor
