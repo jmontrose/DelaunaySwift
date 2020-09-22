@@ -12,24 +12,45 @@ class DBScan {
     var clusters = [DBCluster]()
     let eps:Double
     let min:Int
-    let vertices:[DBVertex]
-
-    init(_ vertices:[DBVertex], eps:Double, min:Int) {
-        self.vertices = vertices
+    var vertices = Set<DBVertex>()
+    let triangles:[Triangle]
+    
+    init(_ triangles:[Triangle], eps:Double, min:Int) {
+        self.triangles = triangles
         self.eps = eps
         self.min = min
     }
     
     func run() {
-        var todo = vertices
-        while !todo.isEmpty {
-            if let vertex = todo.popLast() {
-                process(vertex)
+        var vertexMap = [MKMapPoint:DBVertex]()
+        
+        for triangle in triangles {
+            let triVertices:[DBVertex] = triangle.points.map { point in
+                if vertexMap[point] == nil {
+                    vertexMap[point] = DBVertex(point)
+                }
+                return vertexMap[point]!
+            }
+            for v in triVertices {
+                v.addNeighbors(triVertices)
             }
         }
+        
+        for v in vertexMap.values {
+            vertices.update(with: v)
+        }
+        
+        print("run vertices:\(vertices.count)")
+        
+//        var todo = triangles
+//        while !todo.isEmpty {
+//            if let triangle = todo.popLast() {
+//                process(triangle)
+//            }
+//        }
     }
     
-    func process(_ vertex:DBVertex) {
+    func process(_ triangle:Triangle) {
         //print("proc \(vertex)")
     }
 }
@@ -45,14 +66,30 @@ enum VertexState: String {
     case noise
 }
 
-class DBVertex: CustomStringConvertible {
+class DBVertex: CustomStringConvertible, Hashable {
+    static func == (lhs: DBVertex, rhs: DBVertex) -> Bool {
+        return lhs.point == rhs.point
+    }
+    
     let point:MKMapPoint
-    var neighbors = [DBVertex]()
+    var neighbors = Set<DBVertex>()
     let cluster:DBCluster? = nil
     let state:VertexState = .pending
     
     init(_ point:MKMapPoint) {
         self.point = point
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(point)
+    }
+    
+    func addNeighbors(_ vertices:[DBVertex]) {
+        for v in vertices {
+            if v != self {
+                neighbors.update(with: v)
+            }
+        }
     }
     
     var color:CGColor {

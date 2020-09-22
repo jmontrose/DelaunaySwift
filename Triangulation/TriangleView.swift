@@ -209,6 +209,9 @@ class TriangleView: UIView {
             return inside
         }
         print("points after filter \(p.count) ")
+        p = Array(Set(p))
+        print("             unique \(p.count) ")
+
         if p.count == 0 {
             fatalError()
         }
@@ -217,7 +220,7 @@ class TriangleView: UIView {
         normConverter = makeNorm(mapPoints)
         mkTriangles = triangulate(mapPoints)
         let vertices = mapPoints.map { DBVertex($0) }
-        let scan = DBScan(vertices, eps: 100, min: 5)
+        let scan = DBScan(mkTriangles, eps: 100, min: 5)
         scan.run()
         
         triangles = []
