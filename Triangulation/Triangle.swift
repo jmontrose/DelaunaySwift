@@ -10,7 +10,13 @@ import MapKit
 
 /// A simple struct representing 3 points
 public struct Triangle: Hashable, Equatable {
-    
+
+    public init(_ points: [MKMapPoint]) {
+        self.point1 = points[0]
+        self.point2 = points[1]
+        self.point3 = points[2]
+    }
+
     public init(point1: MKMapPoint, point2: MKMapPoint, point3: MKMapPoint) {
         self.point1 = point1
         self.point2 = point2

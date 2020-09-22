@@ -10,7 +10,7 @@ import UIKit
 import DelaunaySwift
 import MapKit
 
-extension Triangle {
+extension Triangle {    
     func toPath() -> CGPath {
         
         let path = CGMutablePath()
@@ -47,6 +47,15 @@ extension MKMapPoint {
         let s2 = sign(p: self, v0: triangle.point2, v1: triangle.point3)
         let s3 = sign(p: self, v0: triangle.point3, v1: triangle.point1)
         return (s1 * s2 >= 0) && (s2 * s3 >= 0)
+    }
+    
+    public func screen(by size:CGSize) -> MKMapPoint {
+        // specific conversion hack
+        // use width for y to force into 1:1 aspect ratio in portrait
+        let yfactor = Double(size.width)
+        let yoffset = (Double(size.height) / Double(4))
+        let my = (y * yfactor + yoffset)
+        return MKMapPoint(x: x * Double(size.width), y: my)
     }
 }
 

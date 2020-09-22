@@ -138,8 +138,10 @@ typealias ArrayOfArrays = [[Double]]
 class TriangleView: UIView {
     var triangles: [(Triangle, CAShapeLayer)] = []
     var delaunayTriangles = [Triangle]()
+    var mkTriangles = [Triangle]()
     var allPoints = [MKMapPoint]()
     //var pointsToTri = [MKMapPoint:[Triangle]]()
+    var normConverter:PointConverter? = nil
     
     func loadText(name:String) -> String {
         let url = Bundle(for: type(of: self)).url(forResource: name, withExtension: "")
@@ -162,7 +164,6 @@ class TriangleView: UIView {
         } catch {
             fatalError("err: \(error)")
         }
-        return []
     }
     
     override init(frame: CGRect) {
@@ -225,11 +226,12 @@ class TriangleView: UIView {
         
         let mapPoints = p.map { MKMapPoint(x: $0.x, y: $0.y) }
         let vertices = mapPoints.map { DBVertex($0) }
-        
+        normConverter = makeNorm(mapPoints)
         
         
         p = normalize(p)
         allPoints = generateNorms(p, bounds.size)
+        mkTriangles = triangulate(mapPoints)
         delaunayTriangles = triangulate(allPoints)
         
         for triangle in delaunayTriangles {
@@ -242,7 +244,17 @@ class TriangleView: UIView {
         triangles = []
         for triangle in delaunayTriangles {
             let triangleLayer = CAShapeLayer()
+            let normTriangle = Triangle(
+                triangle.points.map {
+                    let normPoint = normConverter!($0)
+                    let screenPoint = normPoint.screen(by: bounds.size)
+                    return screenPoint
+                })
+            //print("convert \(triangle) to \(normTriangle)")
             triangleLayer.path = triangle.toPath()
+            print("old path \(triangle.toPath())")
+            print("new path \(normTriangle.toPath())")
+            //print("path \(triangle) \(normTriangle) \(triangleLayer.path)")
             triangleLayer.fillColor = UIColor().randomColor().cgColor
             //triangleLayer.strokeColor = UIColor.black.cgColor
             triangleLayer.backgroundColor = UIColor.clear.cgColor
