@@ -81,8 +81,13 @@ extension MKMapPoint {
 
 func generateNorms(_ points:[MKMapPoint], _ size:CGSize) -> [MKMapPoint] {
     return points.map { p in
-        let y = (p.y * Double(size.width) + (Double(size.height) / Double(4)) )
-        return MKMapPoint(x: p.x * Double(size.width), y: y)
+        let yfactor = Double(size.width)
+        let yoffset = (Double(size.height) / Double(4))
+        let my = (p.y * yfactor + yoffset)
+
+        
+        //let y = p.y * Double(size.width) + (Double(size.height) / Double(4))
+        return MKMapPoint(x: p.x * Double(size.width), y: my)
     }
 }
 
@@ -225,13 +230,14 @@ class TriangleView: UIView {
         }
         
         let mapPoints = p.map { MKMapPoint(x: $0.x, y: $0.y) }
+        mkTriangles = triangulate(mapPoints)
+
         let vertices = mapPoints.map { DBVertex($0) }
         normConverter = makeNorm(mapPoints)
         
-        
-        p = normalize(p)
+        //p = normalize(p)
+        p = normalizeWithFunc(p)
         allPoints = generateNorms(p, bounds.size)
-        mkTriangles = triangulate(mapPoints)
         delaunayTriangles = triangulate(allPoints)
         
         for triangle in delaunayTriangles {

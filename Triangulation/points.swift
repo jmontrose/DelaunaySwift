@@ -24,20 +24,11 @@ func makeMapPoints(_ nums:[[Double]]) -> [MKMapPoint] {
     }
 }
 
-
-func normalize(_ points:[MKMapPoint]) -> [MKMapPoint] {
-    let xs = points.map { $0.x }
-    let ys = points.map { $0.y }
-    let pmin = CGSize(width: xs.min()!, height: ys.min()!)
-    let pmax = CGSize(width: xs.max()!, height: ys.max()!)
-    let pspan = CGSize(width: pmax.width - pmin.width, height: pmax.height - pmin.height)
-    print ("NORM pspan:\(pspan)")
-    return points.map { p in
-        let x = (p.x - Double(pmin.width)) / Double(pspan.width)
-        let y = (p.y - Double(pmin.height)) / Double(pspan.height)
-        return MKMapPoint(x:x, y:y)
+func normalizeWithFunc(_ points:[MKMapPoint]) -> [MKMapPoint] {
+    let converter = makeNorm(points)
+    return points.map {
+        converter($0)
     }
-
 }
 
 typealias PointConverter = (MKMapPoint) -> (MKMapPoint)
