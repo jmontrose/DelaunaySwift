@@ -196,7 +196,7 @@ class TriangleView: UIView {
             }
             
             
-            //layer.strokeColor = UIColor.black.cgColor
+            layer.strokeColor = UIColor.black.cgColor
         }
     }
     
@@ -260,12 +260,12 @@ class TriangleView: UIView {
             //print("convert \(triangle) to \(normTriangle)")
             let oldPath = triangle.toPath()
             let newPath = normTriangle.toPath()
-            print("old path \(oldPath)")
-            print("new path \(newPath)")
-            let eq = oldPath == newPath
-            print("eq \(eq)")
-            triangleLayer.path = oldPath
-            print("    path \(triangleLayer.path!)")
+            ///print("old path \(oldPath)")
+            //print("new path \(newPath)")
+            //let eq = oldPath == newPath
+            //print("eq \(eq)")
+            triangleLayer.path = newPath
+            //print("    path \(triangleLayer.path!)")
             //print("path \(triangle) \(normTriangle) \(triangleLayer.path)")
             triangleLayer.fillColor = UIColor().randomColor().cgColor
             //triangleLayer.strokeColor = UIColor.black.cgColor

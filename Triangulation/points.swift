@@ -44,7 +44,7 @@ func makeNorm(_ points:[MKMapPoint]) -> PointConverter {
         let x = (point.x - Double(pmin.width)) / Double(pspan.width)
         let y = (point.y - Double(pmin.height)) / Double(pspan.height)
         let mkpoint = MKMapPoint(x:x, y:y)
-        print("CONVERT \(point) to \(mkpoint)")
+        //print("CONVERT \(point) to \(mkpoint)")
         return mkpoint
     }
 }
