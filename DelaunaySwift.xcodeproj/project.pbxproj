@@ -155,7 +155,6 @@
 			isa = PBXGroup;
 			children = (
 				C41B5BDB1C3FF667006B601E /* DelaunaySwift.swift */,
-				8819E0BE251A2E8700113DFF /* dbscan.swift */,
 				C41B5BDF1C3FF703006B601E /* Triangle.swift */,
 				C41B5BE11C3FF72E006B601E /* Point.swift */,
 				C4E432A81CB684DD006E3BC0 /* Edge.swift */,
@@ -184,6 +183,7 @@
 				C41B5BFF1C3FFF49006B601E /* Utilities.swift */,
 				8819E0B42518F9E300113DFF /* points1000.json */,
 				8819E0B92519055500113DFF /* points10000.json */,
+				8819E0BE251A2E8700113DFF /* dbscan.swift */,
 				C41B5BFC1C3FFE3C006B601E /* Supporting Files */,
 			);
 			name = TriangulationExample;
