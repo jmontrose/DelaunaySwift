@@ -41,17 +41,24 @@ class DBScan {
         }
         
         print("run vertices:\(vertices.count)")
+        let ns = vertices.map { $0.neighbors.count }
+        var hist = [Int:Int]()
+        for n in ns {
+            hist[n, default:0] += 1
+        }
+        print("hist \(hist)")
         
-//        var todo = triangles
-//        while !todo.isEmpty {
-//            if let triangle = todo.popLast() {
-//                process(triangle)
-//            }
-//        }
+        var todo = Array(vertices)
+        while !todo.isEmpty {
+            if let vertex = todo.popLast() {
+                process(vertex)
+            }
+        }
     }
     
-    func process(_ triangle:Triangle) {
-        //print("proc \(vertex)")
+    func process(_ vertex:DBVertex) {
+        print("proc \(vertex)")
+        
     }
 }
 
@@ -106,6 +113,6 @@ class DBVertex: CustomStringConvertible, Hashable {
     }
     
     var description: String {
-        return "Vertex \(state)"
+        return "Vertex \(state) \(neighbors.count)"
     }
 }

@@ -269,7 +269,7 @@ class TriangleView: UIView {
                 layer.fillColor = UIColor.white.cgColor
                 
             } else {
-                //layer.strokeColor = UIColor.black.cgColor
+                layer.strokeColor = UIColor.black.cgColor
             }
             
             
