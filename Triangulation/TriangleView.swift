@@ -181,23 +181,7 @@ class TriangleView: UIView {
     
     override func didMoveToSuperview() {
         initTriangles()
-        print("have \(delaunayTriangles.count) triangles")
-        
-        let circles = delaunayTriangles.map { circumcircle($0) }
-        let rsqrs = circles.map { $0.rsqr }.sorted()
-        let med = rsqrs[rsqrs.count/2]
-        print("rsqrs \(rsqrs.count) min:\(rsqrs.min()!) max:\(rsqrs.max()!) med:\(med)")
-        
-        for (triangle, layer) in triangles {
-            let c = circumcircle(triangle)
-            //print ("Triangle \(c)")
-            if c.rsqr > 500 {
-                layer.fillColor = UIColor.white.cgColor
-            }
-            
-            
-            layer.strokeColor = UIColor.black.cgColor
-        }
+
     }
     
     func initTriangles() {
@@ -273,6 +257,24 @@ class TriangleView: UIView {
             layer.addSublayer(triangleLayer)
             
             triangles.append((triangle, triangleLayer))
+        }
+        
+        print("have \(delaunayTriangles.count) triangles")
+        
+        let circles = delaunayTriangles.map { circumcircle($0) }
+        let rsqrs = circles.map { $0.rsqr }.sorted()
+        let med = rsqrs[rsqrs.count/2]
+        print("rsqrs \(rsqrs.count) min:\(rsqrs.min()!) max:\(rsqrs.max()!) med:\(med)")
+        
+        for (triangle, layer) in triangles {
+            let c = circumcircle(triangle)
+            //print ("Triangle \(c)")
+            if c.rsqr > 340 {
+                layer.fillColor = UIColor.white.cgColor
+            }
+            
+            
+            layer.strokeColor = UIColor.black.cgColor
         }
     }
     
