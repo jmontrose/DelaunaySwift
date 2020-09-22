@@ -159,11 +159,11 @@ class DBVertex: CustomStringConvertible, Hashable {
         case .pending:
             return UIColor.orange.cgColor
         case .core:
-            return UIColor.orange.cgColor
+            return UIColor.blue.cgColor
         case .border:
-            return UIColor.orange.cgColor
+            return UIColor.green.cgColor
         case .noise:
-            return UIColor.orange.cgColor
+            return UIColor.red.cgColor
         }
     }
     

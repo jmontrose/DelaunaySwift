@@ -242,7 +242,7 @@ class TriangleView: UIView {
             triangles.append((normTriangle, triangleLayer))
         }
         
-        for vertex in vertices {
+        for vertex in scan.vertices {
             let normPoint = normConverter!(vertex.point)
             let screenPoint = normPoint.screen(by: bounds.size)
             let vertexLayer = CAShapeLayer()
@@ -275,16 +275,6 @@ class TriangleView: UIView {
             
             //layer.strokeColor = UIColor.black.cgColor
         }
-    }
-    
-    func neighbors(for triangle:Triangle) -> [Triangle] {
-        
-//        let tries = triangle.points.flatMap {
-//            //pointsToTri[$0]!
-//        }
-//        let uniques = Set(tries)
-//        return Array(uniques)
-        return []
     }
     
     @IBAction func singleTap(recognizer: UITapGestureRecognizer) {
