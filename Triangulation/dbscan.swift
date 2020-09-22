@@ -61,6 +61,7 @@ class DBScan {
     func makeCluster() -> DBCluster {
         let cluster = DBCluster()
         clusters.append(cluster)
+        cluster.number = clusters.count
         return cluster
     }
     
@@ -115,12 +116,17 @@ class DBScan {
     }
 }
 
-class DBCluster {
+class DBCluster: CustomStringConvertible {
     var vertices = Set<DBVertex>()
     var color = UIColor().randomColor().cgColor
+    var number = 0
     
     func add(_ vertex:DBVertex) {
         if let oldCluster = vertex.cluster {
+            if oldCluster.number == self.number {
+                //print("    - skip overwrite \(oldCluster)")
+                return
+            }
             print("    - overwrite \(oldCluster) with \(self)")
         }
         //assert(vertex.cluster == nil)
@@ -131,6 +137,10 @@ class DBCluster {
 
         self.vertices.insert(vertex)
         vertex.cluster = self
+    }
+    
+    var description: String {
+        return "<Cluster \(number)>"
     }
 }
 
