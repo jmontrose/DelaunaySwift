@@ -55,6 +55,19 @@ class DBVertex: CustomStringConvertible {
         self.point = point
     }
     
+    var color:CGColor {
+        switch state {
+        case .pending:
+            return UIColor.orange.cgColor
+        case .core:
+            return UIColor.orange.cgColor
+        case .border:
+            return UIColor.orange.cgColor
+        case .noise:
+            return UIColor.orange.cgColor
+        }
+    }
+    
     var description: String {
         return "Vertex \(state)"
     }

@@ -246,8 +246,8 @@ class TriangleView: UIView {
             let step = Double(3)
             let vbox = CGRect(x: screenPoint.x - step, y: screenPoint.y - step, width: step * 2, height: step * 2)
             vertexLayer.path = UIBezierPath(ovalIn: vbox).cgPath;
-            vertexLayer.strokeColor = UIColor.orange.cgColor
-            vertexLayer.fillColor = UIColor.orange.cgColor
+            vertexLayer.strokeColor = vertex.color
+            vertexLayer.fillColor = vertex.color
             layer.addSublayer(vertexLayer)
 
         }
