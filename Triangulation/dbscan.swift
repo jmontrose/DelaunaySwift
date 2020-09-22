@@ -12,10 +12,16 @@ class DBScan {
     var clusters = [DBCluster]()
     let eps:Double
     let min:Int
+    let vertices:[DBVertex]
 
     init(_ vertices:[DBVertex], eps:Double, min:Int) {
+        self.vertices = vertices
         self.eps = eps
         self.min = min
+    }
+    
+    func run() {
+        
     }
 }
 

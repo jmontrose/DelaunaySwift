@@ -214,22 +214,11 @@ class TriangleView: UIView {
         }
         
         let mapPoints = p.map { MKMapPoint(x: $0.x, y: $0.y) }
-        mkTriangles = triangulate(mapPoints)
-
-        let vertices = mapPoints.map { DBVertex($0) }
         normConverter = makeNorm(mapPoints)
-        
-        //p = normalize(p)
-//        p = normalizeWithFunc(p)
-//        allPoints = generateNorms(p, bounds.size)
-//        delaunayTriangles = triangulate(allPoints)
-//
-//        for triangle in delaunayTriangles {
-//            for point in triangle.points {
-//                //pointsToTri[point, default: []].append(triangle)
-//            }
-//        }
-        
+        mkTriangles = triangulate(mapPoints)
+        let vertices = mapPoints.map { DBVertex($0) }
+        let scan = DBScan(vertices, eps: 100, min: 5)
+        scan.run()
         
         triangles = []
         for mkTriangle in mkTriangles {
