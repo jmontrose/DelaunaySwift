@@ -58,16 +58,31 @@ class DBScan {
 
     }
     
+    func makeCluster() -> DBCluster {
+        let cluster = DBCluster()
+        clusters.append(cluster)
+        return cluster
+    }
+    
     func process(_ vertex:DBVertex) {
         let hood = neighborhoodFor(vertex)
         if hood.count >= self.min {
             vertex.ratchet(state: .core)
+            if vertex.cluster == nil {
+                let cluster = makeCluster()
+                cluster.add(vertex)
+            }
         } else {
             vertex.ratchet(state: .noise)
         }
         print("proc \(vertex) hood:\(hood.count)")
         for neighbor in hood {
             neighbor.ratchet(state: .border)
+            if let cluster = vertex.cluster {
+                cluster.add(neighbor)
+            } else {
+                
+            }
         }
     }
     
@@ -101,7 +116,22 @@ class DBScan {
 }
 
 class DBCluster {
-    var vertices = [DBVertex]()
+    var vertices = Set<DBVertex>()
+    var color = UIColor().randomColor().cgColor
+    
+    func add(_ vertex:DBVertex) {
+        if let oldCluster = vertex.cluster {
+            print("    - overwrite \(oldCluster) with \(self)")
+        }
+        //assert(vertex.cluster == nil)
+        //assert(!vertices.contains(vertex))
+        if vertices.contains(vertex) {
+            print("    - double-set vertex cluster")
+        }
+
+        self.vertices.insert(vertex)
+        vertex.cluster = self
+    }
 }
 
 enum VertexState: String {
@@ -118,7 +148,7 @@ class DBVertex: CustomStringConvertible, Hashable {
     
     let point:MKMapPoint
     var neighbors = Set<DBVertex>()
-    let cluster:DBCluster? = nil
+    var cluster:DBCluster? = nil
     var state:VertexState = .pending
     
     init(_ point:MKMapPoint) {
@@ -155,6 +185,10 @@ class DBVertex: CustomStringConvertible, Hashable {
     }
     
     var color:CGColor {
+        if let cluster = self.cluster {
+            return cluster.color
+        }
+        
         switch state {
         case .pending:
             return UIColor.orange.cgColor
