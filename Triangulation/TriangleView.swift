@@ -256,7 +256,7 @@ class TriangleView: UIView {
             triangleLayer.backgroundColor = UIColor.clear.cgColor
             layer.addSublayer(triangleLayer)
             
-            triangles.append((triangle, triangleLayer))
+            triangles.append((normTriangle, triangleLayer))
         }
         
         print("have \(delaunayTriangles.count) triangles")
@@ -269,12 +269,15 @@ class TriangleView: UIView {
         for (triangle, layer) in triangles {
             let c = circumcircle(triangle)
             //print ("Triangle \(c)")
-            if c.rsqr > 340 {
+            if c.rsqr > 500 {
                 layer.fillColor = UIColor.white.cgColor
+                
+            } else {
+                layer.strokeColor = UIColor.black.cgColor
             }
             
             
-            layer.strokeColor = UIColor.black.cgColor
+            //layer.strokeColor = UIColor.black.cgColor
         }
     }
     
