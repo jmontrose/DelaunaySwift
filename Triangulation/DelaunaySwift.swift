@@ -6,8 +6,10 @@
 //  Copyright © 2016 zero. All rights reserved.
 //
 
+import MapKit
+
 /// Generates a supertraingle containing all other triangles
-func supertriangle(_ points: [Point]) -> [Point] {
+func supertriangle(_ points: [MKMapPoint]) -> [MKMapPoint] {
     var xmin = Double(Int32.max)
     var ymin = Double(Int32.max)
     var xmax = -Double(Int32.max)
@@ -27,14 +29,19 @@ func supertriangle(_ points: [Point]) -> [Point] {
     let ymid = ymin + dy * 0.5
     
     return [
-        Point(x: xmid - 20 * dmax, y: ymid - dmax),
-        Point(x: xmid, y: ymid + 20 * dmax),
-        Point(x: xmid + 20 * dmax, y: ymid - dmax)
+        MKMapPoint(x: xmid - 20 * dmax, y: ymid - dmax),
+        MKMapPoint(x: xmid, y: ymid + 20 * dmax),
+        MKMapPoint(x: xmid + 20 * dmax, y: ymid - dmax)
     ]
 }
 
+
+func circumcircle(_ triangle:Triangle) -> Circumcircle {
+    return circumcircle(triangle.point1, j: triangle.point2, k: triangle.point3)
+}
+
 /// Calculate the intersecting circumcircle for a set of 3 points
-func circumcircle(_ i: Point, j: Point, k: Point) -> Circumcircle {
+func circumcircle(_ i: MKMapPoint, j: MKMapPoint, k: MKMapPoint) -> Circumcircle {
     let x1 = i.x
     let y1 = i.y
     let x2 = j.x
@@ -83,10 +90,10 @@ func circumcircle(_ i: Point, j: Point, k: Point) -> Circumcircle {
 }
 
 /// Deduplicate a collection of edges
-internal func dedup(_ edges: [Point]) -> [Point] {
+internal func dedup(_ edges: [MKMapPoint]) -> [MKMapPoint] {
     
     var e = edges
-    var a: Point?, b: Point?, m: Point?, n: Point?
+    var a: MKMapPoint?, b: MKMapPoint?, m: MKMapPoint?, n: MKMapPoint?
     
     var j = e.count
     while j > 0 {
@@ -113,7 +120,7 @@ internal func dedup(_ edges: [Point]) -> [Point] {
     return e
 }
 
-public func triangulate(_ points: [Point]) -> [Triangle] {
+public func triangulate(_ points: [MKMapPoint]) -> [Triangle] {
     
     var _points = Array(Set.init(points))
     
@@ -124,7 +131,7 @@ public func triangulate(_ points: [Point]) -> [Triangle] {
     let n = _points.count
     var open = [Circumcircle]()
     var completed = [Circumcircle]()
-    var edges = [Point]()
+    var edges = [MKMapPoint]()
     
     /* Make an array of indices into the point array, sorted by the
     * points' x-position. */
@@ -198,11 +205,11 @@ public func triangulate(_ points: [Point]) -> [Triangle] {
     * building a list of triplets that represent triangles. */
     completed += open
     
-    let ignored: Set<Point> = [_points[n], _points[n + 1], _points[n + 2]]
+    let ignored: Set<MKMapPoint> = [_points[n], _points[n + 1], _points[n + 2]]
     
     let results = completed.compactMap { (circumCircle) -> Triangle? in
         
-        let current: Set<Point> = [circumCircle.point1, circumCircle.point2, circumCircle.point3]
+        let current: Set<MKMapPoint> = [circumCircle.point1, circumCircle.point2, circumCircle.point3]
         let intersection = ignored.intersection(current)
         if intersection.count > 0 {
             return nil

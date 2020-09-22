@@ -8,6 +8,7 @@
 
 import UIKit
 import DelaunaySwift
+import MapKit
 
 extension Triangle {
     func toPath() -> CGPath {
@@ -28,7 +29,7 @@ extension Triangle {
     }
 }
 
-extension Point {
+extension MKMapPoint {
     public init(point: CGPoint) {
         self.init(x: Double(point.x), y: Double(point.y))
     }
@@ -38,7 +39,7 @@ extension Point {
     }
     
     public func inside(_ triangle: Triangle) -> Bool {
-        func sign(p: Point, v0: Point, v1: Point) -> Double {
+        func sign(p: MKMapPoint, v0: MKMapPoint, v1: MKMapPoint) -> Double {
             return (p.x - v1.x) * (v0.y - v1.y) - (v0.x - v1.x) * (p.y - v1.y)
         }
         
@@ -68,5 +69,20 @@ extension CGRect {
     }
     var cornerNe:CGRect {
         return CGRect(origin: CGPoint(x: midX, y: origin.y), size: quarter)
+    }
+}
+
+extension MKMapPoint: Equatable { }
+extension MKMapSize: Equatable { }
+extension MKMapRect: Equatable { }
+
+public func ==(l: MKMapPoint, r: MKMapPoint) -> Bool { return MKMapPointEqualToPoint(l, r) }
+public func ==(l: MKMapSize,  r: MKMapSize)  -> Bool { return MKMapSizeEqualToSize(l, r)   }
+public func ==(l: MKMapRect,  r: MKMapRect)  -> Bool { return MKMapRectEqualToRect(l, r)   }
+
+extension MKMapPoint: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(x)
+        hasher.combine(y)
     }
 }

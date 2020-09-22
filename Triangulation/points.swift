@@ -12,9 +12,9 @@ import GameplayKit
 import DelaunaySwift
 import MapKit
 
-func makePoints(_ nums:[[Double]]) -> [Point] {
+func makePoints(_ nums:[[Double]]) -> [MKMapPoint] {
     return nums.map { i in
-        Point(x: i[0], y: i[1])
+        MKMapPoint(x: i[0], y: i[1])
     }
 }
 
@@ -25,7 +25,7 @@ func makeMapPoints(_ nums:[[Double]]) -> [MKMapPoint] {
 }
 
 
-func normalize(_ points:[Point]) -> [Point] {
+func normalize(_ points:[MKMapPoint]) -> [MKMapPoint] {
     let xs = points.map { $0.x }
     let ys = points.map { $0.y }
     let pmin = CGSize(width: xs.min()!, height: ys.min()!)
@@ -35,13 +35,13 @@ func normalize(_ points:[Point]) -> [Point] {
     return points.map { p in
         let x = (p.x - Double(pmin.width)) / Double(pspan.width)
         let y = (p.y - Double(pmin.height)) / Double(pspan.height)
-        return Point(x:x, y:y)
+        return MKMapPoint(x:x, y:y)
     }
 
 }
 
-typealias PointConverter = (Point) -> (Point)
-func makeNorm(_ points:[Point]) -> PointConverter {
+typealias PointConverter = (MKMapPoint) -> (MKMapPoint)
+func makeNorm(_ points:[MKMapPoint]) -> PointConverter {
     let xs = points.map { $0.x }
     let ys = points.map { $0.y }
     let pmin = CGSize(width: xs.min()!, height: ys.min()!)
@@ -52,11 +52,11 @@ func makeNorm(_ points:[Point]) -> PointConverter {
         point in
         let x = (point.x - Double(pmin.width)) / Double(pspan.width)
         let y = (point.y - Double(pmin.height)) / Double(pspan.height)
-        return Point(x:x, y:y)
+        return MKMapPoint(x:x, y:y)
     }
 }
 
-func box(from points:[Point]) -> CGRect {
+func box(from points:[MKMapPoint]) -> CGRect {
     let xs = points.map { $0.x }
     let ys = points.map { $0.y }
     let pmin = CGPoint(x: xs.min()!, y: ys.min()!)

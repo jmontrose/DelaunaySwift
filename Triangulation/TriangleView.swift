@@ -10,92 +10,92 @@ import UIKit
 import GameplayKit
 import MapKit
 import DelaunaySwift
+//
+//struct Circumcircle: Hashable {
+//    let point1: MKMapPoint
+//    let point2: MKMapPoint
+//    let point3: MKMapPoint
+//    let x: Double
+//    let y: Double
+//    let rsqr: Double
+//}
+//
+//func circumcircle(_ triangle:Triangle) -> Circumcircle {
+//    return circumcircle(triangle.point1, j: triangle.point2, k: triangle.point3)
+//}
+//
+///// Calculate the intersecting circumcircle for a set of 3 points
+//func circumcircle(_ i: MKMapPoint, j: MKMapPoint, k: MKMapPoint) -> Circumcircle {
+//    let x1 = i.x
+//    let y1 = i.y
+//    let x2 = j.x
+//    let y2 = j.y
+//    let x3 = k.x
+//    let y3 = k.y
+//    let xc: Double
+//    let yc: Double
+//
+//    let fabsy1y2 = abs(y1 - y2)
+//    let fabsy2y3 = abs(y2 - y3)
+//
+//    if fabsy1y2 < Double.ulpOfOne {
+//        let m2 = -((x3 - x2) / (y3 - y2))
+//        let mx2 = (x2 + x3) / 2
+//        let my2 = (y2 + y3) / 2
+//        xc = (x2 + x1) / 2
+//        yc = m2 * (xc - mx2) + my2
+//    } else if fabsy2y3 < Double.ulpOfOne {
+//        let m1 = -((x2 - x1) / (y2 - y1))
+//        let mx1 = (x1 + x2) / 2
+//        let my1 = (y1 + y2) / 2
+//        xc = (x3 + x2) / 2
+//        yc = m1 * (xc - mx1) + my1
+//    } else {
+//        let m1 = -((x2 - x1) / (y2 - y1))
+//        let m2 = -((x3 - x2) / (y3 - y2))
+//        let mx1 = (x1 + x2) / 2
+//        let mx2 = (x2 + x3) / 2
+//        let my1 = (y1 + y2) / 2
+//        let my2 = (y2 + y3) / 2
+//        xc = (m1 * mx1 - m2 * mx2 + my2 - my1) / (m1 - m2)
+//
+//        if fabsy1y2 > fabsy2y3 {
+//            yc = m1 * (xc - mx1) + my1
+//        } else {
+//            yc = m2 * (xc - mx2) + my2
+//        }
+//    }
+//
+//    let dx = x2 - xc
+//    let dy = y2 - yc
+//    let rsqr = dx * dx + dy * dy
+//
+//    return Circumcircle(point1: i, point2: j, point3: k, x: xc, y: yc, rsqr: rsqr)
+//}
 
-struct Circumcircle: Hashable {
-    let point1: Point
-    let point2: Point
-    let point3: Point
-    let x: Double
-    let y: Double
-    let rsqr: Double
-}
-
-func circumcircle(_ triangle:Triangle) -> Circumcircle {
-    return circumcircle(triangle.point1, j: triangle.point2, k: triangle.point3)
-}
-
-/// Calculate the intersecting circumcircle for a set of 3 points
-func circumcircle(_ i: Point, j: Point, k: Point) -> Circumcircle {
-    let x1 = i.x
-    let y1 = i.y
-    let x2 = j.x
-    let y2 = j.y
-    let x3 = k.x
-    let y3 = k.y
-    let xc: Double
-    let yc: Double
-    
-    let fabsy1y2 = abs(y1 - y2)
-    let fabsy2y3 = abs(y2 - y3)
-    
-    if fabsy1y2 < Double.ulpOfOne {
-        let m2 = -((x3 - x2) / (y3 - y2))
-        let mx2 = (x2 + x3) / 2
-        let my2 = (y2 + y3) / 2
-        xc = (x2 + x1) / 2
-        yc = m2 * (xc - mx2) + my2
-    } else if fabsy2y3 < Double.ulpOfOne {
-        let m1 = -((x2 - x1) / (y2 - y1))
-        let mx1 = (x1 + x2) / 2
-        let my1 = (y1 + y2) / 2
-        xc = (x3 + x2) / 2
-        yc = m1 * (xc - mx1) + my1
-    } else {
-        let m1 = -((x2 - x1) / (y2 - y1))
-        let m2 = -((x3 - x2) / (y3 - y2))
-        let mx1 = (x1 + x2) / 2
-        let mx2 = (x2 + x3) / 2
-        let my1 = (y1 + y2) / 2
-        let my2 = (y2 + y3) / 2
-        xc = (m1 * mx1 - m2 * mx2 + my2 - my1) / (m1 - m2)
-        
-        if fabsy1y2 > fabsy2y3 {
-            yc = m1 * (xc - mx1) + my1
-        } else {
-            yc = m2 * (xc - mx2) + my2
-        }
+extension MKMapPoint {
+    static func random(size:CGSize) -> MKMapPoint {
+        return MKMapPoint(x: Double.random(in: Double(0)...Double(size.width)), y: Double.random(in: Double(0)...Double(size.height)))
     }
-    
-    let dx = x2 - xc
-    let dy = y2 - yc
-    let rsqr = dx * dx + dy * dy
-    
-    return Circumcircle(point1: i, point2: j, point3: k, x: xc, y: yc, rsqr: rsqr)
 }
 
-extension Point {
-    static func random(size:CGSize) -> Point {
-        return Point(x: Double.random(in: Double(0)...Double(size.width)), y: Double.random(in: Double(0)...Double(size.height)))
-    }
-}
-
-func generateNorms(_ points:[Point], _ size:CGSize) -> [Point] {
+func generateNorms(_ points:[MKMapPoint], _ size:CGSize) -> [MKMapPoint] {
     return points.map { p in
         let y = (p.y * Double(size.width) + (Double(size.height) / Double(4)) )
-        return Point(x: p.x * Double(size.width), y: y)
+        return MKMapPoint(x: p.x * Double(size.width), y: y)
     }
 }
 
-func generateVerticesRandom(_ size: CGSize, count:Int, seed: UInt64 = UInt64.random(in: 0..<UInt64.max)) -> [Point] {
-    var points = [Point]()
+func generateVerticesRandom(_ size: CGSize, count:Int, seed: UInt64 = UInt64.random(in: 0..<UInt64.max)) -> [MKMapPoint] {
+    var points = [MKMapPoint]()
     for _ in 0...100 {
-        points.append(Point.random(size: size))
+        points.append(MKMapPoint.random(size: size))
     }
     return points
 }
 
 /// Generate set of points for our triangulation to use
-func generateVertices(_ size: CGSize, cellSize: CGFloat, variance: CGFloat = 0.75, seed: UInt64 = UInt64.random(in: 0..<UInt64.max)) -> [Point] {
+func generateVertices(_ size: CGSize, cellSize: CGFloat, variance: CGFloat = 0.75, seed: UInt64 = UInt64.random(in: 0..<UInt64.max)) -> [MKMapPoint] {
     
     // How many cells we're going to have on each axis (pad by 2 cells on each edge)
     let cellsX = (size.width + 4 * cellSize) / cellSize
@@ -107,7 +107,7 @@ func generateVertices(_ size: CGSize, cellSize: CGFloat, variance: CGFloat = 0.7
     
     let _variance = cellSize * variance / 4
     
-    var points = [Point]()
+    var points = [MKMapPoint]()
     let minX = -bleedX
     let maxX = size.width + bleedX
     let minY = -bleedY
@@ -121,7 +121,7 @@ func generateVertices(_ size: CGSize, cellSize: CGFloat, variance: CGFloat = 0.7
             let x = i + cellSize/2 + CGFloat(generator.nextUniform()) + CGFloat.random(in: -_variance..._variance)
             let y = j + cellSize/2 + CGFloat(generator.nextUniform()) + CGFloat.random(in: -_variance..._variance)
             
-            points.append(Point(x: Double(x), y: Double(y)))
+            points.append(MKMapPoint(x: Double(x), y: Double(y)))
         }
     }
     
@@ -138,8 +138,8 @@ typealias ArrayOfArrays = [[Double]]
 class TriangleView: UIView {
     var triangles: [(Triangle, CAShapeLayer)] = []
     var delaunayTriangles = [Triangle]()
-    var allPoints = [Point]()
-    var pointsToTri = [Point:[Triangle]]()
+    var allPoints = [MKMapPoint]()
+    //var pointsToTri = [MKMapPoint:[Triangle]]()
     
     func loadText(name:String) -> String {
         let url = Bundle(for: type(of: self)).url(forResource: name, withExtension: "")
@@ -153,7 +153,7 @@ class TriangleView: UIView {
         return string
     }
     
-    func load(_ name:String) -> [Point] {
+    func load(_ name:String) -> [MKMapPoint] {
         let raw = loadText(name: name)
         do {
             let simplePoints = try JSONDecoder().decode(ArrayOfArrays.self, from: Data(raw.utf8))
@@ -234,7 +234,7 @@ class TriangleView: UIView {
         
         for triangle in delaunayTriangles {
             for point in triangle.points {
-                pointsToTri[point, default: []].append(triangle)
+                //pointsToTri[point, default: []].append(triangle)
             }
         }
         
@@ -254,17 +254,18 @@ class TriangleView: UIView {
     
     func neighbors(for triangle:Triangle) -> [Triangle] {
         
-        let tries = triangle.points.flatMap {
-            pointsToTri[$0]!
-        }
-        let uniques = Set(tries)
-        return Array(uniques)
+//        let tries = triangle.points.flatMap {
+//            //pointsToTri[$0]!
+//        }
+//        let uniques = Set(tries)
+//        return Array(uniques)
+        return []
     }
     
     @IBAction func singleTap(recognizer: UITapGestureRecognizer) {
         if recognizer.state == .ended {
             let tapLocation = recognizer.location(in: self)
-            let vertex = Point(point: tapLocation)
+            let vertex = MKMapPoint(point: tapLocation)
             for (triangle, triangleLayer) in triangles {
                 if vertex.inside(triangle) {
                     triangleLayer.fillColor = UIColor.black.cgColor

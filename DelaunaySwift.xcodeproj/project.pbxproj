@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		880AFD44251A350400699505 /* DelaunaySwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41B5BDB1C3FF667006B601E /* DelaunaySwift.swift */; };
+		880AFD48251A350800699505 /* Triangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41B5BDF1C3FF703006B601E /* Triangle.swift */; };
+		880AFD50251A350F00699505 /* Edge.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E432A81CB684DD006E3BC0 /* Edge.swift */; };
+		880AFD54251A351200699505 /* CircumCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41B5BE31C3FF751006B601E /* CircumCircle.swift */; };
 		8819E0AD2518EAD100113DFF /* points.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8819E0AC2518EAD100113DFF /* points.swift */; };
 		8819E0B52518F9E300113DFF /* points1000.json in Resources */ = {isa = PBXBuildFile; fileRef = 8819E0B42518F9E300113DFF /* points1000.json */; };
 		8819E0BA2519055500113DFF /* points10000.json in Resources */ = {isa = PBXBuildFile; fileRef = 8819E0B92519055500113DFF /* points10000.json */; };
@@ -14,10 +18,6 @@
 		C41B5BC51C3FF148006B601E /* DelaunaySwift.h in Headers */ = {isa = PBXBuildFile; fileRef = C41B5BC41C3FF148006B601E /* DelaunaySwift.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C41B5BCC1C3FF148006B601E /* DelaunaySwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C41B5BC11C3FF148006B601E /* DelaunaySwift.framework */; };
 		C41B5BD11C3FF148006B601E /* DelaunayTriangulationSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41B5BD01C3FF148006B601E /* DelaunayTriangulationSwiftTests.swift */; };
-		C41B5BDC1C3FF667006B601E /* DelaunaySwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41B5BDB1C3FF667006B601E /* DelaunaySwift.swift */; };
-		C41B5BE01C3FF703006B601E /* Triangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41B5BDF1C3FF703006B601E /* Triangle.swift */; };
-		C41B5BE21C3FF72E006B601E /* Point.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41B5BE11C3FF72E006B601E /* Point.swift */; };
-		C41B5BE41C3FF751006B601E /* CircumCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41B5BE31C3FF751006B601E /* CircumCircle.swift */; };
 		C41B5BEC1C3FFDF8006B601E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41B5BEB1C3FFDF8006B601E /* AppDelegate.swift */; };
 		C41B5BEE1C3FFDF8006B601E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41B5BED1C3FFDF8006B601E /* ViewController.swift */; };
 		C41B5BF11C3FFDF8006B601E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C41B5BEF1C3FFDF8006B601E /* Main.storyboard */; };
@@ -27,12 +27,6 @@
 		C41B5C021C4001A2006B601E /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41B5BFF1C3FFF49006B601E /* Utilities.swift */; };
 		C45BF3591C4535C100DE404D /* DelaunaySwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C41B5BC11C3FF148006B601E /* DelaunaySwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C4C89ABD1C410B0D0022F237 /* DelaunaySwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C41B5BC11C3FF148006B601E /* DelaunaySwift.framework */; };
-		C4E432A91CB684DD006E3BC0 /* Edge.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E432A81CB684DD006E3BC0 /* Edge.swift */; };
-		D2A9911E1F4863B600851EE9 /* Triangle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41B5BDF1C3FF703006B601E /* Triangle.swift */; };
-		D2A9911F1F4863B600851EE9 /* DelaunaySwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41B5BDB1C3FF667006B601E /* DelaunaySwift.swift */; };
-		D2A991201F4863B600851EE9 /* Edge.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E432A81CB684DD006E3BC0 /* Edge.swift */; };
-		D2A991211F4863B600851EE9 /* Point.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41B5BE11C3FF72E006B601E /* Point.swift */; };
-		D2A991221F4863B600851EE9 /* CircumCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41B5BE31C3FF751006B601E /* CircumCircle.swift */; };
 		D2A991251F4863B600851EE9 /* DelaunaySwift.h in Headers */ = {isa = PBXBuildFile; fileRef = C41B5BC41C3FF148006B601E /* DelaunaySwift.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
@@ -80,7 +74,6 @@
 		C41B5BD21C3FF148006B601E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C41B5BDB1C3FF667006B601E /* DelaunaySwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DelaunaySwift.swift; sourceTree = "<group>"; };
 		C41B5BDF1C3FF703006B601E /* Triangle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Triangle.swift; sourceTree = "<group>"; };
-		C41B5BE11C3FF72E006B601E /* Point.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Point.swift; sourceTree = "<group>"; };
 		C41B5BE31C3FF751006B601E /* CircumCircle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircumCircle.swift; sourceTree = "<group>"; };
 		C41B5BE91C3FFDF8006B601E /* Triangulation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Triangulation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C41B5BEB1C3FFDF8006B601E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -154,11 +147,6 @@
 		C41B5BC31C3FF148006B601E /* DelaunayTriangulation */ = {
 			isa = PBXGroup;
 			children = (
-				C41B5BDB1C3FF667006B601E /* DelaunaySwift.swift */,
-				C41B5BDF1C3FF703006B601E /* Triangle.swift */,
-				C41B5BE11C3FF72E006B601E /* Point.swift */,
-				C4E432A81CB684DD006E3BC0 /* Edge.swift */,
-				C41B5BE31C3FF751006B601E /* CircumCircle.swift */,
 				C41B5BFB1C3FFE29006B601E /* Supporting Files */,
 			);
 			path = DelaunayTriangulation;
@@ -184,6 +172,10 @@
 				8819E0B42518F9E300113DFF /* points1000.json */,
 				8819E0B92519055500113DFF /* points10000.json */,
 				8819E0BE251A2E8700113DFF /* dbscan.swift */,
+				C41B5BDB1C3FF667006B601E /* DelaunaySwift.swift */,
+				C41B5BDF1C3FF703006B601E /* Triangle.swift */,
+				C4E432A81CB684DD006E3BC0 /* Edge.swift */,
+				C41B5BE31C3FF751006B601E /* CircumCircle.swift */,
 				C41B5BFC1C3FFE3C006B601E /* Supporting Files */,
 			);
 			name = TriangulationExample;
@@ -393,11 +385,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C41B5BE01C3FF703006B601E /* Triangle.swift in Sources */,
-				C41B5BDC1C3FF667006B601E /* DelaunaySwift.swift in Sources */,
-				C4E432A91CB684DD006E3BC0 /* Edge.swift in Sources */,
-				C41B5BE21C3FF72E006B601E /* Point.swift in Sources */,
-				C41B5BE41C3FF751006B601E /* CircumCircle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -414,11 +401,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				C41B5BEE1C3FFDF8006B601E /* ViewController.swift in Sources */,
+				880AFD44251A350400699505 /* DelaunaySwift.swift in Sources */,
 				8819E0BF251A2E8700113DFF /* dbscan.swift in Sources */,
 				C41B5C011C4001A2006B601E /* TriangleView.swift in Sources */,
 				C41B5C021C4001A2006B601E /* Utilities.swift in Sources */,
 				C41B5BEC1C3FFDF8006B601E /* AppDelegate.swift in Sources */,
 				8819E0AD2518EAD100113DFF /* points.swift in Sources */,
+				880AFD50251A350F00699505 /* Edge.swift in Sources */,
+				880AFD54251A351200699505 /* CircumCircle.swift in Sources */,
+				880AFD48251A350800699505 /* Triangle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -426,11 +417,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D2A9911E1F4863B600851EE9 /* Triangle.swift in Sources */,
-				D2A9911F1F4863B600851EE9 /* DelaunaySwift.swift in Sources */,
-				D2A991201F4863B600851EE9 /* Edge.swift in Sources */,
-				D2A991211F4863B600851EE9 /* Point.swift in Sources */,
-				D2A991221F4863B600851EE9 /* CircumCircle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -647,7 +633,6 @@
 		C41B5BF91C3FFDF8006B601E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 2466624KEK;
 				INFOPLIST_FILE = Triangulation/Info.plist;
@@ -660,7 +645,6 @@
 		C41B5BFA1C3FFDF8006B601E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = 2466624KEK;
 				INFOPLIST_FILE = Triangulation/Info.plist;
