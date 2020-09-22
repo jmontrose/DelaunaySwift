@@ -40,6 +40,22 @@ func normalize(_ points:[Point]) -> [Point] {
 
 }
 
+typealias PointConverter = (Point) -> (Point)
+func makeNorm(_ points:[Point]) -> PointConverter {
+    let xs = points.map { $0.x }
+    let ys = points.map { $0.y }
+    let pmin = CGSize(width: xs.min()!, height: ys.min()!)
+    let pmax = CGSize(width: xs.max()!, height: ys.max()!)
+    let pspan = CGSize(width: pmax.width - pmin.width, height: pmax.height - pmin.height)
+    print ("NORM pspan:\(pspan)")
+    return {
+        point in
+        let x = (point.x - Double(pmin.width)) / Double(pspan.width)
+        let y = (point.y - Double(pmin.height)) / Double(pspan.height)
+        return Point(x:x, y:y)
+    }
+}
+
 func box(from points:[Point]) -> CGRect {
     let xs = points.map { $0.x }
     let ys = points.map { $0.y }
@@ -49,35 +65,3 @@ func box(from points:[Point]) -> CGRect {
     return CGRect(origin: pmin, size: pspan)
 }
 
-class DBScan {
-    var clusters = [DBCluster]()
-    let eps:Double
-    let min:Int
-
-    init(_ vertices:[DBVertex], eps:Double, min:Int) {
-        self.eps = eps
-        self.min = min
-    }
-}
-
-class DBCluster {
-    var vertices = [DBVertex]()
-}
-
-enum VertexState {
-    case pending
-    case core
-    case border
-    case noise
-}
-
-class DBVertex {
-    let point:MKMapPoint
-    var neighbors = [DBVertex]()
-    let cluster:DBCluster? = nil
-    let state:VertexState = .pending
-    
-    init(_ point:MKMapPoint) {
-        self.point = point
-    }
-}
