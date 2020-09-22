@@ -232,7 +232,7 @@ class TriangleView: UIView {
         
         
         triangles = []
-        for (i, mkTriangle) in mkTriangles.enumerated() {
+        for mkTriangle in mkTriangles {
             let triangleLayer = CAShapeLayer()
             let normTriangle = Triangle(
                 mkTriangle.points.map {
