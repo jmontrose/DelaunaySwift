@@ -133,7 +133,6 @@
 		C41B5BB71C3FF148006B601E = {
 			isa = PBXGroup;
 			children = (
-				8819E0BE251A2E8700113DFF /* dbscan.swift */,
 				C41B5BEA1C3FFDF8006B601E /* TriangulationExample */,
 				C41B5BC31C3FF148006B601E /* DelaunayTriangulation */,
 				C41B5BCF1C3FF148006B601E /* DelaunayTriangulationTests */,
@@ -156,6 +155,7 @@
 			isa = PBXGroup;
 			children = (
 				C41B5BDB1C3FF667006B601E /* DelaunaySwift.swift */,
+				8819E0BE251A2E8700113DFF /* dbscan.swift */,
 				C41B5BDF1C3FF703006B601E /* Triangle.swift */,
 				C41B5BE11C3FF72E006B601E /* Point.swift */,
 				C4E432A81CB684DD006E3BC0 /* Edge.swift */,
