@@ -8,6 +8,7 @@
 
 import UIKit
 import GameplayKit
+import MapKit
 import DelaunaySwift
 
 struct Circumcircle: Hashable {
@@ -206,11 +207,14 @@ class TriangleView: UIView {
         
         let bounding = box(from: p)
         let bounding1000 = CGRect(x: 42869063.32687465, y: 103726748.26747078, width: 95355.88277196884, height: 90267.3662738651)
+        let boundingq1 = bounding1000
+            .cornerNe
+            .cornerNe
         print("bounding \(bounding)")
         print("bounding \(bounding1000)")
         p = p.filter { point in
             let cgpoint = CGPoint(x: point.x, y: point.y)
-            let inside = bounding1000.contains(cgpoint)
+            let inside = boundingq1.contains(cgpoint)
             //print("test \(cgpoint) \(box) \(inside)")
             return inside
         }
@@ -218,6 +222,11 @@ class TriangleView: UIView {
         if p.count == 0 {
             fatalError()
         }
+        
+        let mapPoints = p.map { MKMapPoint(x: $0.x, y: $0.y) }
+        let vertices = mapPoints.map { DBVertex($0) }
+        
+        
         
         p = normalize(p)
         allPoints = generateNorms(p, bounds.size)

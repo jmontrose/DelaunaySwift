@@ -58,3 +58,15 @@ extension UIColor {
         return color
     }
 }
+
+extension CGRect {
+    var quarter:CGSize {
+        return CGSize(width: size.width / 2, height: size.height / 2)
+    }
+    var mid:CGPoint {
+        return CGPoint(x: midX, y: midY)
+    }
+    var cornerNe:CGRect {
+        return CGRect(origin: CGPoint(x: midX, y: origin.y), size: quarter)
+    }
+}
