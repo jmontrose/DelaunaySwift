@@ -220,20 +220,19 @@ class TriangleView: UIView {
         normConverter = makeNorm(mapPoints)
         
         //p = normalize(p)
-        p = normalizeWithFunc(p)
-        allPoints = generateNorms(p, bounds.size)
-        delaunayTriangles = triangulate(allPoints)
-        
-        for triangle in delaunayTriangles {
-            for point in triangle.points {
-                //pointsToTri[point, default: []].append(triangle)
-            }
-        }
+//        p = normalizeWithFunc(p)
+//        allPoints = generateNorms(p, bounds.size)
+//        delaunayTriangles = triangulate(allPoints)
+//
+//        for triangle in delaunayTriangles {
+//            for point in triangle.points {
+//                //pointsToTri[point, default: []].append(triangle)
+//            }
+//        }
         
         
         triangles = []
-        for (i, triangle) in delaunayTriangles.enumerated() {
-            let mkTriangle = mkTriangles[i]
+        for (i, mkTriangle) in mkTriangles.enumerated() {
             let triangleLayer = CAShapeLayer()
             let normTriangle = Triangle(
                 mkTriangle.points.map {
@@ -241,27 +240,18 @@ class TriangleView: UIView {
                     let screenPoint = normPoint.screen(by: bounds.size)
                     return screenPoint
                 })
-            //print("convert \(triangle) to \(normTriangle)")
-            let oldPath = triangle.toPath()
             let newPath = normTriangle.toPath()
-            ///print("old path \(oldPath)")
-            //print("new path \(newPath)")
-            //let eq = oldPath == newPath
-            //print("eq \(eq)")
             triangleLayer.path = newPath
-            //print("    path \(triangleLayer.path!)")
-            //print("path \(triangle) \(normTriangle) \(triangleLayer.path)")
             triangleLayer.fillColor = UIColor().randomColor().cgColor
-            //triangleLayer.strokeColor = UIColor.black.cgColor
             triangleLayer.backgroundColor = UIColor.clear.cgColor
             layer.addSublayer(triangleLayer)
             
             triangles.append((normTriangle, triangleLayer))
         }
         
-        print("have \(delaunayTriangles.count) triangles")
+        print("have \(mkTriangles.count) triangles")
         
-        let circles = delaunayTriangles.map { circumcircle($0) }
+        let circles = mkTriangles.map { circumcircle($0) }
         let rsqrs = circles.map { $0.rsqr }.sorted()
         let med = rsqrs[rsqrs.count/2]
         print("rsqrs \(rsqrs.count) min:\(rsqrs.min()!) max:\(rsqrs.max()!) med:\(med)")
