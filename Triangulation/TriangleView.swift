@@ -220,7 +220,7 @@ class TriangleView: UIView {
         normConverter = makeNorm(mapPoints)
         mkTriangles = triangulate(mapPoints)
         let vertices = mapPoints.map { DBVertex($0) }
-        let scan = DBScan(mkTriangles, eps: 100, min: 5)
+        let scan = DBScan(mkTriangles, radius: 100, min: 5)
         scan.run()
         
         triangles = []

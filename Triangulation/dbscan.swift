@@ -10,14 +10,14 @@ import MapKit
 
 class DBScan {
     var clusters = [DBCluster]()
-    let eps:Double
+    let radius:Double
     let min:Int
     var vertices = Set<DBVertex>()
     let triangles:[Triangle]
     
-    init(_ triangles:[Triangle], eps:Double, min:Int) {
+    init(_ triangles:[Triangle], radius:Double, min:Int) {
         self.triangles = triangles
-        self.eps = eps
+        self.radius = radius
         self.min = min
     }
     
@@ -41,12 +41,6 @@ class DBScan {
         }
         
         print("run vertices:\(vertices.count)")
-        let ns = vertices.map { $0.neighbors.count }
-        var hist = [Int:Int]()
-        for n in ns {
-            hist[n, default:0] += 1
-        }
-        print("hist \(hist)")
         
         var todo = Array(vertices)
         while !todo.isEmpty {
@@ -54,13 +48,26 @@ class DBScan {
                 process(vertex)
             }
         }
+        
+        let states = vertices.map { $0.state }
+        var hist = [VertexState:Int]()
+        for s in states {
+            hist[s, default:0] += 1
+        }
+        print("hist \(hist)")
+
     }
     
     func process(_ vertex:DBVertex) {
-        print("proc \(vertex)")
-        for v in neighborhoodFor(vertex) {
-            let distance = vertex.point.distance(to: v.point)
-            print("   neighbor \(v) distance \(distance)")
+        let hood = neighborhoodFor(vertex)
+        if hood.count >= self.min {
+            vertex.ratchet(state: .core)
+        } else {
+            vertex.ratchet(state: .noise)
+        }
+        print("proc \(vertex) hood:\(hood.count)")
+        for neighbor in hood {
+            neighbor.ratchet(state: .border)
         }
     }
     
@@ -73,7 +80,7 @@ class DBScan {
             }
             let d = vertex.point.distance(to: candidate.point)
             //print("     distance \(d)")
-            return vertex.point.distance(to: candidate.point) < 100.0
+            return vertex.point.distance(to: candidate.point) < radius
         }
         extendedHood = buildNeighborhood(extendedHood, center:vertex, next: vertex.neighbors, check:neighborCheck, depth: 1)
         return extendedHood
@@ -112,10 +119,27 @@ class DBVertex: CustomStringConvertible, Hashable {
     let point:MKMapPoint
     var neighbors = Set<DBVertex>()
     let cluster:DBCluster? = nil
-    let state:VertexState = .pending
+    var state:VertexState = .pending
     
     init(_ point:MKMapPoint) {
         self.point = point
+    }
+    
+    func ratchet(state newState:VertexState) {
+        switch newState {
+        case .pending:
+            fatalError()
+        case .core:
+            state = .core
+        case .border:
+            if state != .core {
+                state = .border
+            }
+        case .noise:
+            if state == .pending {
+                state = .noise
+            }
+        }
     }
     
     func hash(into hasher: inout Hasher) {
