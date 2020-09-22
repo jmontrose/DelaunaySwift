@@ -21,7 +21,16 @@ class DBScan {
     }
     
     func run() {
-        
+        var todo = vertices
+        while !todo.isEmpty {
+            if let vertex = todo.popLast() {
+                process(vertex)
+            }
+        }
+    }
+    
+    func process(_ vertex:DBVertex) {
+        print("proc \(vertex)")
     }
 }
 
@@ -29,14 +38,14 @@ class DBCluster {
     var vertices = [DBVertex]()
 }
 
-enum VertexState {
+enum VertexState: String {
     case pending
     case core
     case border
     case noise
 }
 
-class DBVertex {
+class DBVertex: CustomStringConvertible {
     let point:MKMapPoint
     var neighbors = [DBVertex]()
     let cluster:DBCluster? = nil
@@ -44,5 +53,9 @@ class DBVertex {
     
     init(_ point:MKMapPoint) {
         self.point = point
+    }
+    
+    var description: String {
+        return "Vertex \(state)"
     }
 }
