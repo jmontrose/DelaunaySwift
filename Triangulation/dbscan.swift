@@ -57,8 +57,35 @@ class DBScan {
     }
     
     func process(_ vertex:DBVertex) {
-        print("proc \(vertex)")
-        
+        var extendedHood = Set<DBVertex>()
+        func neighborCheck(_ candidate:DBVertex) -> Bool {
+            if candidate == vertex {
+                //print("     skip center")
+                return false
+            }
+            let d = vertex.point.distance(to: candidate.point)
+            //print("     distance \(d)")
+            return vertex.point.distance(to: candidate.point) < 100.0
+        }
+        extendedHood = buildNeighborhood(extendedHood, center:vertex, next: vertex.neighbors, check:neighborCheck, depth: 1)
+        print("proc \(vertex) \(extendedHood.count)")
+        for v in extendedHood {
+            let distance = vertex.point.distance(to: v.point)
+            print("   neighbor \(v) distance \(distance)")
+        }
+    }
+    
+    func buildNeighborhood(_ hood:Set<DBVertex>, center:DBVertex, next:Set<DBVertex>, check:(DBVertex)->Bool, depth:Int) -> Set<DBVertex> {
+        var result = Set(hood)
+        let keep = next.filter(check)
+        //print("keep \(keep.count) of \(next.count)")
+        result.formUnion(keep)
+        if depth > 0 {
+            keep.forEach { vertex in
+                result.formUnion(buildNeighborhood(result, center: center, next: vertex.neighbors, check:check, depth: depth-1))
+            }
+        }
+        return result
     }
 }
 
