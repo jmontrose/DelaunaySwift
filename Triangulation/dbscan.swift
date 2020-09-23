@@ -213,6 +213,6 @@ class DBVertex: CustomStringConvertible, Hashable {
     }
     
     var description: String {
-        return "Vertex \(state) \(neighbors.count)"
+        return "Vertex \(state) cluster:\(cluster?.number) \(neighbors.count)"
     }
 }

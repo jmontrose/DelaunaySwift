@@ -140,13 +140,21 @@ struct SimplePoints: Decodable {
 
 typealias ArrayOfArrays = [[Double]]
 
+struct DisplayTriangle {
+    let triangle:Triangle
+    let mktriangle:Triangle
+    let layer:CAShapeLayer
+}
+
 class TriangleView: UIView {
     var triangles: [(Triangle, CAShapeLayer)] = []
+    var displayTriangles = [DisplayTriangle]()
     var delaunayTriangles = [Triangle]()
     var mkTriangles = [Triangle]()
     var allPoints = [MKMapPoint]()
     //var pointsToTri = [MKMapPoint:[Triangle]]()
     var normConverter:PointConverter? = nil
+    var dbscanner:DBScan!
     
     func loadText(name:String) -> String {
         let url = Bundle(for: type(of: self)).url(forResource: name, withExtension: "")
@@ -220,8 +228,8 @@ class TriangleView: UIView {
         normConverter = makeNorm(mapPoints)
         mkTriangles = triangulate(mapPoints)
         let vertices = mapPoints.map { DBVertex($0) }
-        let scan = DBScan(mkTriangles, radius: 100, min: 5)
-        scan.run()
+        dbscanner = DBScan(mkTriangles, radius: 100, min: 5)
+        dbscanner.run()
         
         triangles = []
         for mkTriangle in mkTriangles {
@@ -238,14 +246,14 @@ class TriangleView: UIView {
 
             triangleLayer.fillColor = UIColor.lightGray.cgColor
 
-            if let triVerts = scan.triangleToVertices[mkTriangle] {
+            if let triVerts = dbscanner.triangleToVertices[mkTriangle] {
                 
                 let states = triVerts.map { $0.state }
                 var hist = [VertexState:Int]()
                 for s in states {
                     hist[s, default:0] += 1
                 }
-                print("*** TRI HIST: \(hist)")
+                //print("*** TRI HIST: \(hist)")
                 if let coreCount = hist[.core] {
                     if coreCount == 3 {
                         triangleLayer.fillColor = UIColor.darkGray.cgColor
@@ -273,9 +281,10 @@ class TriangleView: UIView {
             layer.addSublayer(triangleLayer)
             
             triangles.append((normTriangle, triangleLayer))
+            displayTriangles.append(DisplayTriangle(triangle: normTriangle, mktriangle: mkTriangle, layer: triangleLayer))
         }
         
-        for vertex in scan.vertices {
+        for vertex in dbscanner.vertices {
             let normPoint = normConverter!(vertex.point)
             let screenPoint = normPoint.screen(by: bounds.size)
             let vertexLayer = CAShapeLayer()
@@ -295,14 +304,14 @@ class TriangleView: UIView {
         let med = rsqrs[rsqrs.count/2]
         print("rsqrs \(rsqrs.count) min:\(rsqrs.min()!) max:\(rsqrs.max()!) med:\(med)")
         
-        for (triangle, layer) in triangles {
-            let c = circumcircle(triangle)
+        for display in displayTriangles {
+            let c = circumcircle(display.triangle)
             //print ("Triangle \(c)")
             if c.rsqr > 500 {
-                layer.fillColor = UIColor.white.cgColor
+                display.layer.fillColor = UIColor.white.cgColor
                 
             } else {
-                layer.strokeColor = UIColor.black.cgColor
+                display.layer.strokeColor = UIColor.black.cgColor
             }
             
             
@@ -314,9 +323,16 @@ class TriangleView: UIView {
         if recognizer.state == .ended {
             let tapLocation = recognizer.location(in: self)
             let vertex = MKMapPoint(point: tapLocation)
-            for (triangle, triangleLayer) in triangles {
-                if vertex.inside(triangle) {
-                    triangleLayer.fillColor = UIColor.black.cgColor
+            for display in displayTriangles {
+            //for (triangle, triangleLayer) in triangles {
+                if vertex.inside(display.triangle) {
+                    display.layer.fillColor = UIColor.black.cgColor
+                    
+                    if let triVerts = dbscanner.triangleToVertices[display.mktriangle] {
+
+                        print("TAP \(triVerts)")
+                        return
+                    }
                 }
             }
         }
