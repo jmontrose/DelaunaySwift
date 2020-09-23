@@ -12,6 +12,7 @@ class DBScan {
     var clusters = [DBCluster]()
     let radius:Double
     let min:Int
+    let depth = 6
     var vertices = Set<DBVertex>()
     let triangles:[Triangle]
     
@@ -54,8 +55,10 @@ class DBScan {
         for s in states {
             hist[s, default:0] += 1
         }
-        print("hist \(hist)")
-
+        print("hist \(hist) clusters:\(clusters.count)")
+        for cluster in clusters {
+            print("    \(cluster)")
+        }
     }
     
     func makeCluster() -> DBCluster {
@@ -66,6 +69,9 @@ class DBScan {
     }
     
     func process(_ vertex:DBVertex) {
+        if vertex.state != .pending {
+            return
+        }
         let hood = neighborhoodFor(vertex)
         if hood.count >= self.min {
             vertex.ratchet(state: .core)
@@ -88,28 +94,21 @@ class DBScan {
     }
     
     func neighborhoodFor(_ vertex:DBVertex) -> Set<DBVertex> {
-        var extendedHood = Set<DBVertex>()
-        func neighborCheck(_ candidate:DBVertex) -> Bool {
-            if candidate == vertex {
-                //print("     skip center")
-                return false
-            }
-            let d = vertex.point.distance(to: candidate.point)
-            //print("     distance \(d)")
-            return vertex.point.distance(to: candidate.point) < radius
-        }
-        extendedHood = buildNeighborhood(extendedHood, center:vertex, next: vertex.neighbors, check:neighborCheck, depth: 1)
+        var extendedHood = buildNeighborhood([], center:vertex, depth: self.depth)
+        extendedHood.remove(vertex) // ignore seed
         return extendedHood
     }
     
-    func buildNeighborhood(_ hood:Set<DBVertex>, center:DBVertex, next:Set<DBVertex>, check:(DBVertex)->Bool, depth:Int) -> Set<DBVertex> {
+    func buildNeighborhood(_ hood:Set<DBVertex>, center:DBVertex, depth:Int) -> Set<DBVertex> {
         var result = Set(hood)
-        let keep = next.filter(check)
+        let keep = center.neighbors.filter { candidate in
+            center.point.distance(to: candidate.point) < radius
+        }
         //print("keep \(keep.count) of \(next.count)")
         result.formUnion(keep)
         if depth > 0 {
             keep.forEach { vertex in
-                result.formUnion(buildNeighborhood(result, center: center, next: vertex.neighbors, check:check, depth: depth-1))
+                result.formUnion(buildNeighborhood(result, center: vertex, depth: depth-1))
             }
         }
         return result
@@ -140,7 +139,7 @@ class DBCluster: CustomStringConvertible {
     }
     
     var description: String {
-        return "<Cluster \(number)>"
+        return "<Cluster \(number) count:\(vertices.count)>"
     }
 }
 
@@ -207,7 +206,7 @@ class DBVertex: CustomStringConvertible, Hashable {
         case .border:
             return UIColor.green.cgColor
         case .noise:
-            return UIColor.red.cgColor
+            return UIColor.black.cgColor
         }
     }
     
