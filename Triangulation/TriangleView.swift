@@ -235,7 +235,40 @@ class TriangleView: UIView {
             let newPath = normTriangle.toPath()
             triangleLayer.path = newPath
             //triangleLayer.fillColor = UIColor().randomColor().cgColor
+
             triangleLayer.fillColor = UIColor.lightGray.cgColor
+
+            if let triVerts = scan.triangleToVertices[mkTriangle] {
+                
+                let states = triVerts.map { $0.state }
+                var hist = [VertexState:Int]()
+                for s in states {
+                    hist[s, default:0] += 1
+                }
+                print("*** TRI HIST: \(hist)")
+                if let coreCount = hist[.core] {
+                    if coreCount == 3 {
+                        triangleLayer.fillColor = UIColor.darkGray.cgColor
+                    }
+                }
+                
+                var clusters = [Int:Int]()
+                for v in triVerts {
+                    if let c = v.cluster {
+                        clusters[c.number, default: 0] += 1
+                    }
+                }
+                if clusters.count == 1 {
+                    let ccount:Int = Array(clusters.values).first!
+                    if ccount == 3 {
+                        triangleLayer.fillColor = triVerts[0].cluster!.color
+                    }
+                }
+                
+            } else {
+                fatalError()
+            }
+            
             triangleLayer.backgroundColor = UIColor.clear.cgColor
             layer.addSublayer(triangleLayer)
             
@@ -250,7 +283,7 @@ class TriangleView: UIView {
             let vbox = CGRect(x: screenPoint.x - step, y: screenPoint.y - step, width: step * 2, height: step * 2)
             vertexLayer.path = UIBezierPath(ovalIn: vbox).cgPath;
             vertexLayer.strokeColor = vertex.color
-            vertexLayer.fillColor = vertex.color
+            vertexLayer.fillColor = UIColor.black.cgColor
             layer.addSublayer(vertexLayer)
 
         }

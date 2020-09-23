@@ -15,6 +15,7 @@ class DBScan {
     let depth = 6
     var vertices = Set<DBVertex>()
     let triangles:[Triangle]
+    var triangleToVertices = [Triangle:[DBVertex]]()
     
     init(_ triangles:[Triangle], radius:Double, min:Int) {
         self.triangles = triangles
@@ -35,6 +36,7 @@ class DBScan {
             for v in triVertices {
                 v.addNeighbors(triVertices)
             }
+            triangleToVertices[triangle] = triVertices
         }
         
         for v in vertexMap.values {
@@ -69,7 +71,7 @@ class DBScan {
     }
     
     func process(_ vertex:DBVertex) {
-        if vertex.state != .pending {
+        if vertex.state != .pending && vertex.state != .border {
             return
         }
         let hood = neighborhoodFor(vertex)
