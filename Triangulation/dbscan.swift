@@ -81,17 +81,18 @@ class DBScan {
                 let cluster = makeCluster()
                 cluster.add(vertex)
             }
+
+            print("proc \(vertex) hood:\(hood.count)")
+            for neighbor in hood {
+                neighbor.ratchet(state: .border)
+                if let cluster = vertex.cluster {
+                    cluster.add(neighbor)
+                } else {
+                    
+                }
+            }
         } else {
             vertex.ratchet(state: .noise)
-        }
-        print("proc \(vertex) hood:\(hood.count)")
-        for neighbor in hood {
-            neighbor.ratchet(state: .border)
-            if let cluster = vertex.cluster {
-                cluster.add(neighbor)
-            } else {
-                
-            }
         }
     }
     
@@ -159,6 +160,7 @@ class DBVertex: CustomStringConvertible, Hashable {
     
     let point:MKMapPoint
     var neighbors = Set<DBVertex>()
+    var edges = [DBEdge]()
     var cluster:DBCluster? = nil
     var state:VertexState = .pending
     
@@ -187,10 +189,18 @@ class DBVertex: CustomStringConvertible, Hashable {
         hasher.combine(point)
     }
     
+    func edge(for neighbor:DBVertex) -> DBEdge? {
+        for e in edges + neighbor.edges {
+
+        }
+        return nil
+    }
+    
     func addNeighbors(_ vertices:[DBVertex]) {
         for v in vertices {
             if v != self {
-                neighbors.update(with: v)
+                neighbors.insert(v)
+                
             }
         }
     }
@@ -214,5 +224,25 @@ class DBVertex: CustomStringConvertible, Hashable {
     
     var description: String {
         return "Vertex \(state) cluster:\(cluster?.number) \(neighbors.count)"
+    }
+}
+
+struct DBEdge: Hashable {
+    let a:DBVertex
+    let b:DBVertex
+    let distance:CLLocationDistance
+
+    var vertices:[DBVertex] {
+        return [a, b]
+    }
+
+//    init(_ a:DBVertex, _ b:DBVertex) {
+//        let parts = [a, b].sorted { (a, b) -> Bool in
+//            a > b
+//        }
+//    }
+    
+    func connects(_ a:DBVertex, _ b:DBVertex) -> Bool {
+        return vertices.contains(a) && vertices.contains(b)
     }
 }
