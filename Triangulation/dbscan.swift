@@ -60,13 +60,29 @@ class DBScan {
             vertices.update(with: v)
         }
         
+        // compute neighbor proximity lists
+        var phist = [Int:Int]()
+        for vertex in vertices {
+            let extendedHood = neighborhoodFor(vertex)
+            let hoodEdges = extendedHood.map {
+                return VertexEdge(vertex, $0)
+            }
+            vertex.proximity = hoodEdges.filter { candidate in
+                candidate.edge.distance < radius
+            }.sorted { $0.edge.distance < $1.edge.distance }
+            phist[vertex.proximity.count, default: 0] += 1
+        }
+        print("made proximities \(phist)")
         print("run vertices:\(vertices.count)")
         
         var todo = Array(vertices)
+        var loopRadius = 10.0
         while !todo.isEmpty {
-            if let vertex = todo.popLast() {
-                process(vertex)
+            todo.sort {
+                $0.vertexEdgesWithin(loopRadius).count < $1.vertexEdgesWithin(loopRadius).count
             }
+            let vertex = todo.removeFirst()
+            process(vertex)
         }
         
         let states = vertices.map { $0.state }
@@ -126,13 +142,13 @@ class DBScan {
             let distance = vertex.point.distance(to: candidate.point)
             return distance < radius
         }
-        print("range check: \(extendedHood.count) down to \(nearby.count)")
+        //print("range check: \(extendedHood.count) down to \(nearby.count)")
         return nearby
     }
     
     func buildNeighborhood(_ hood:Set<DBVertex>, center:DBVertex, depth:Int) -> Set<DBVertex> {
         var result = Set(hood)
-        let keep = center.neighborsWithin(radius)
+        let keep = center.computedNeighborsWithin(radius)
         result.formUnion(keep)
         if depth > 0 {
             keep.forEach { vertex in
@@ -186,6 +202,9 @@ class DBVertex: CustomStringConvertible, Hashable {
     let point:MKMapPoint
     var neighbors = Set<DBVertex>()
     var edges = Set<Edge>()
+    
+    /// Sorted list of neighbors within `radius`
+    var proximity = [VertexEdge]()
     var triangles = Set<Triangle>()
     var cluster:DBCluster? = nil
     var state:VertexState = .pending
@@ -232,7 +251,26 @@ class DBVertex: CustomStringConvertible, Hashable {
         }
     }
     
+    func vertexEdgesWithin(_ radius:CLLocationDistance) -> [VertexEdge] {
+        return proximity.prefix(while: {
+            $0.edge.distance < radius
+        })
+    }
+    
     func neighborsWithin(_ radius:CLLocationDistance) -> [DBVertex] {
+        return vertexEdgesWithin(radius).map {
+                $0.other(from: self)
+        }
+//        return neighbors.filter { candidate in
+//            guard let edge = self.edge(for: candidate) else {
+//                print("missing edge \(self.point) \(candidate.point)")
+//                fatalError()
+//            }
+//            return edge.distance < radius
+//        }
+    }
+    
+    func computedNeighborsWithin(_ radius:CLLocationDistance) -> [DBVertex] {
         return neighbors.filter { candidate in
             guard let edge = self.edge(for: candidate) else {
                 print("missing edge \(self.point) \(candidate.point)")
@@ -276,22 +314,40 @@ class DBVertex: CustomStringConvertible, Hashable {
     }
 }
 
-struct DBEdge: Hashable {
+/// Struct for all pairs, not just delaunay
+struct VertexEdge: Hashable {
+    let edge:Edge
     let a:DBVertex
     let b:DBVertex
-    let distance:CLLocationDistance
-
-    var vertices:[DBVertex] {
-        return [a, b]
+    
+    init(_ a:DBVertex, _ b:DBVertex) {
+        let e = Edge(a.point, b.point)
+        // edge points are sorted, match them back up
+        if a.point == e.a && b.point == e.b {
+            self.a = a
+            self.b = b
+            self.edge = e
+            return
+        }
+        // reverse sort
+        if a.point == e.b && b.point == e.a {
+            self.a = b
+            self.b = a
+            self.edge = e
+            return
+        }
+        fatalError()
     }
 
-//    init(_ a:DBVertex, _ b:DBVertex) {
-//        let parts = [a, b].sorted { (a, b) -> Bool in
-//            a > b
-//        }
-//    }
-    
-    func connects(_ a:DBVertex, _ b:DBVertex) -> Bool {
-        return vertices.contains(a) && vertices.contains(b)
+    func other(from vertex:DBVertex) -> DBVertex {
+        if vertex == a {
+            return b
+        }
+        if vertex == b {
+            return a
+        }
+        fatalError()
     }
 }
+
+

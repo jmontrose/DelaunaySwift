@@ -79,6 +79,9 @@ extension CGRect {
     var cornerNe:CGRect {
         return CGRect(origin: CGPoint(x: midX, y: origin.y), size: quarter)
     }
+    var cornerNw:CGRect {
+        return CGRect(origin: origin, size: quarter)
+    }
 }
 
 extension MKMapPoint: Equatable { }

@@ -208,6 +208,7 @@ class TriangleView: UIView {
         let boundingq1 = bounding1000
             .cornerNe
             .cornerNe
+            .cornerNw
         print("bounding \(bounding)")
         print("bounding \(bounding1000)")
         p = p.filter { point in
@@ -309,7 +310,9 @@ class TriangleView: UIView {
             //print ("Triangle \(c)")
             if c.rsqr > 500 {
                 display.layer.fillColor = UIColor.white.cgColor
-                
+                display.layer.strokeColor = UIColor.lightGray.cgColor
+                display.layer.opacity = 0.5
+
             } else {
                 display.layer.strokeColor = UIColor.black.cgColor
             }
