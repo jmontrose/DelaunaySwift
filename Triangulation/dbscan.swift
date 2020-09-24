@@ -120,26 +120,19 @@ class DBScan {
     func neighborhoodFor(_ vertex:DBVertex) -> Set<DBVertex> {
         var extendedHood = buildNeighborhood([], center:vertex, depth: self.depth)
         extendedHood.remove(vertex) // ignore seed
-        return extendedHood
+        
+        // filter on direct distance, instead of hop
+        let nearby = extendedHood.filter { candidate in
+            let distance = vertex.point.distance(to: candidate.point)
+            return distance < radius
+        }
+        print("range check: \(extendedHood.count) down to \(nearby.count)")
+        return nearby
     }
     
     func buildNeighborhood(_ hood:Set<DBVertex>, center:DBVertex, depth:Int) -> Set<DBVertex> {
         var result = Set(hood)
-        let keep = center.neighbors.filter { candidate in
-            increment(.distanceEval)
-//            let calcDistance = center.point.distance(to: candidate.point)
-            guard let edge = center.edge(for: candidate) else {
-                print("missing edge \(center.point) \(candidate.point)")
-                fatalError()
-            }
-//            if edge.distance != calcDistance {
-//                print("MISMATCH \(edge.distance - calcDistance)")
-//                print("CALC \(center.point) \(candidate.point) \(calcDistance)")
-//                print("EDGE \(edge) \(edge.distance)")
-//            }
-            return edge.distance < radius
-        }
-        //print("keep \(keep.count) of \(next.count)")
+        let keep = center.neighborsWithin(radius)
         result.formUnion(keep)
         if depth > 0 {
             keep.forEach { vertex in
@@ -239,11 +232,21 @@ class DBVertex: CustomStringConvertible, Hashable {
         }
     }
     
+    func neighborsWithin(_ radius:CLLocationDistance) -> [DBVertex] {
+        return neighbors.filter { candidate in
+            guard let edge = self.edge(for: candidate) else {
+                print("missing edge \(self.point) \(candidate.point)")
+                fatalError()
+            }
+            return edge.distance < radius
+        }
+    }
+    
     func add(_ triangle:Triangle) {
-        print("Add \(triangle) to \(triangles.count)")
+        //print("Add \(triangle) to \(triangles.count)")
         for t in triangles {
             let eq = triangle == t
-            print("   existing: \(t) \(eq)")
+            //print("   existing: \(t) \(eq)")
         }
         triangles.update(with: triangle)
         let newEdges = triangle.edges(for: self.point)

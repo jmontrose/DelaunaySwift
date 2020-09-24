@@ -58,6 +58,13 @@ public struct Triangle: Hashable, Equatable {
             a, b in
             Edge(a, b)
         }
+        let sides = edges.map { $0.distance }
+        let a = sides[0]
+        let b = sides[1]
+        let c = sides[2]
+        // calculate the semi-perimeter
+        let s = (a + b + c) / Double(2.0)
+        area = pow((s*(s-a)*(s-b)*(s-c)), 0.5)
     }
 
     public init(point1: MKMapPoint, point2: MKMapPoint, point3: MKMapPoint) {
@@ -69,6 +76,7 @@ public struct Triangle: Hashable, Equatable {
     public let point3: MKMapPoint
     
     public let edges: [Edge]
+    public let area:Double
     
     public var points:[MKMapPoint] {
         return [point1, point2, point3]
