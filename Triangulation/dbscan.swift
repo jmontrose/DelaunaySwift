@@ -8,24 +8,40 @@
 
 import MapKit
 
+enum CounterType {
+    case distanceEval
+}
+
 class DBScan {
     var clusters = [DBCluster]()
     let radius:Double
     let min:Int
     let depth = 6
     var vertices = Set<DBVertex>()
+    var vertexMap = [MKMapPoint:DBVertex]()
     let triangles:[Triangle]
     var triangleToVertices = [Triangle:[DBVertex]]()
+    
+    var counters = [CounterType:Int]()
     
     init(_ triangles:[Triangle], radius:Double, min:Int) {
         self.triangles = triangles
         self.radius = radius
         self.min = min
+        
+        var s = Set<Triangle>()
+        for t in self.triangles {
+            s.insert(t)
+        }
+        if triangles.count != s.count {
+            var a = Set(triangles)
+            let off = a.symmetricDifference(s)
+            print("INIT \(triangles.count) \(s.count) \(off)")
+            
+        }
     }
     
     func run() {
-        var vertexMap = [MKMapPoint:DBVertex]()
-        
         for triangle in triangles {
             let triVertices:[DBVertex] = triangle.points.map { point in
                 if vertexMap[point] == nil {
@@ -35,6 +51,7 @@ class DBScan {
             }
             for v in triVertices {
                 v.addNeighbors(triVertices)
+                v.add(triangle)
             }
             triangleToVertices[triangle] = triVertices
         }
@@ -57,10 +74,15 @@ class DBScan {
         for s in states {
             hist[s, default:0] += 1
         }
-        print("hist \(hist) clusters:\(clusters.count)")
         for cluster in clusters {
             print("    \(cluster)")
         }
+        print("hist \(hist) clusters:\(clusters.count)")
+        print("counters \(counters)")
+    }
+    
+    func increment(_ counter:CounterType, by value:Int=1) {
+        counters[counter, default:0] += 1
     }
     
     func makeCluster() -> DBCluster {
@@ -81,15 +103,14 @@ class DBScan {
                 let cluster = makeCluster()
                 cluster.add(vertex)
             }
+            guard let vertexCluster = vertex.cluster else {
+                fatalError()
+            }
 
             print("proc \(vertex) hood:\(hood.count)")
             for neighbor in hood {
                 neighbor.ratchet(state: .border)
-                if let cluster = vertex.cluster {
-                    cluster.add(neighbor)
-                } else {
-                    
-                }
+                vertexCluster.add(neighbor)
             }
         } else {
             vertex.ratchet(state: .noise)
@@ -105,7 +126,18 @@ class DBScan {
     func buildNeighborhood(_ hood:Set<DBVertex>, center:DBVertex, depth:Int) -> Set<DBVertex> {
         var result = Set(hood)
         let keep = center.neighbors.filter { candidate in
-            center.point.distance(to: candidate.point) < radius
+            increment(.distanceEval)
+//            let calcDistance = center.point.distance(to: candidate.point)
+            guard let edge = center.edge(for: candidate) else {
+                print("missing edge \(center.point) \(candidate.point)")
+                fatalError()
+            }
+//            if edge.distance != calcDistance {
+//                print("MISMATCH \(edge.distance - calcDistance)")
+//                print("CALC \(center.point) \(candidate.point) \(calcDistance)")
+//                print("EDGE \(edge) \(edge.distance)")
+//            }
+            return edge.distance < radius
         }
         //print("keep \(keep.count) of \(next.count)")
         result.formUnion(keep)
@@ -160,7 +192,8 @@ class DBVertex: CustomStringConvertible, Hashable {
     
     let point:MKMapPoint
     var neighbors = Set<DBVertex>()
-    var edges = [DBEdge]()
+    var edges = Set<Edge>()
+    var triangles = Set<Triangle>()
     var cluster:DBCluster? = nil
     var state:VertexState = .pending
     
@@ -189,20 +222,33 @@ class DBVertex: CustomStringConvertible, Hashable {
         hasher.combine(point)
     }
     
-    func edge(for neighbor:DBVertex) -> DBEdge? {
-        for e in edges + neighbor.edges {
-
+    func edge(for neighbor:DBVertex) -> Edge? {
+        let found = edges.filter {
+            $0.contains([point, neighbor.point])
         }
-        return nil
+        assert(found.count == 1)
+        //print("found \(found.count) edges")
+        return found.first!
     }
     
     func addNeighbors(_ vertices:[DBVertex]) {
         for v in vertices {
             if v != self {
                 neighbors.insert(v)
-                
             }
         }
+    }
+    
+    func add(_ triangle:Triangle) {
+        print("Add \(triangle) to \(triangles.count)")
+        for t in triangles {
+            let eq = triangle == t
+            print("   existing: \(t) \(eq)")
+        }
+        triangles.update(with: triangle)
+        let newEdges = triangle.edges(for: self.point)
+        assert(newEdges.count == 2)
+        edges.formUnion(newEdges)
     }
     
     var color:CGColor {
